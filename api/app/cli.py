@@ -7,6 +7,7 @@ python -m app.cli fx-refresh [days]    fetch exchange rates for the last N days 
 import sys
 
 from app.db import SessionLocal
+from app.demo import load_demo_data
 from app.providers.fx import get_provider
 from app.seed import seed
 from app.services.fx_ingest import refresh
@@ -26,6 +27,8 @@ def main(argv: list[str]) -> int:
             except Exception as e:  # noqa: BLE001
                 print(f"FX refresh failed: {e}", file=sys.stderr)
                 return 2
+        elif argv[0] == "demo-data":
+            print(load_demo_data(db))
         else:
             print(__doc__)
             return 1
