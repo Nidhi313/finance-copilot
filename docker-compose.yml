@@ -1,0 +1,46 @@
+# Local development: Postgres plus the API, with code reload.
+#   docker compose up --build
+# API: http://localhost:8000   API docs: http://localhost:8000/docs
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: finance
+      POSTGRES_PASSWORD: finance
+      POSTGRES_DB: finance
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U finance"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+
+  api:
+    build:
+      context: .
+      dockerfile: api/Dockerfile
+    environment:
+      DATABASE_URL: postgresql+psycopg://finance:finance@db:5432/finance
+      ENVIRONMENT: local
+      WATCHFILES_FORCE_POLLING: "true"  # file watching through Docker on Windows
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./api/app:/app/app
+      - ./api/alembic:/app/alembic
+      - ./country-packs:/app/country-packs
+    # Migrate, seed, fetch about a year of exchange rates (skipped if offline), then serve.
+    command: >
+      sh -c "alembic upgrade head &&
+             python -m app.cli seed &&
+             (python -m app.cli fx-refresh 400 || echo 'FX refresh failed, continuing without rates') &&
+             uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload"
+
+volumes:
+  pgdata:

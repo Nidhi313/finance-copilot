@@ -1,0 +1,122 @@
+{
+  "schema_version": 1,
+  "fy_start": {
+    "month": 7,
+    "day": 1
+  },
+  "account_types": [
+    {
+      "key": "super",
+      "label": "Superannuation"
+    },
+    {
+      "key": "term_deposit",
+      "label": "Term deposit"
+    }
+  ],
+  "calculator_labels": {
+    "regular_investing": "Dollar-cost averaging"
+  },
+  "category_rules": [
+    {
+      "pattern": "woolworths",
+      "category": "Groceries"
+    },
+    {
+      "pattern": "coles",
+      "category": "Groceries"
+    },
+    {
+      "pattern": "aldi",
+      "category": "Groceries"
+    },
+    {
+      "pattern": "uber eats",
+      "category": "Eating out"
+    },
+    {
+      "pattern": "menulog",
+      "category": "Eating out"
+    },
+    {
+      "pattern": "doordash",
+      "category": "Eating out"
+    },
+    {
+      "pattern": "uber",
+      "category": "Transport"
+    },
+    {
+      "pattern": "opal",
+      "category": "Transport"
+    },
+    {
+      "pattern": "myki",
+      "category": "Transport"
+    },
+    {
+      "pattern": "netflix",
+      "category": "Entertainment"
+    },
+    {
+      "pattern": "spotify",
+      "category": "Entertainment"
+    },
+    {
+      "pattern": "agl",
+      "category": "Utilities"
+    },
+    {
+      "pattern": "origin energy",
+      "category": "Utilities"
+    },
+    {
+      "pattern": "telstra",
+      "category": "Utilities"
+    },
+    {
+      "pattern": "optus",
+      "category": "Utilities"
+    },
+    {
+      "pattern": "chemist warehouse",
+      "category": "Health"
+    },
+    {
+      "pattern": "bunnings",
+      "category": "Shopping"
+    },
+    {
+      "pattern": "kmart",
+      "category": "Shopping"
+    },
+    {
+      "pattern": "jb hi-fi",
+      "category": "Shopping"
+    },
+    {
+      "pattern": "salary",
+      "category": "Income"
+    }
+  ],
+  "csv_presets": [
+    {
+      "id": "commbank_transactions",
+      "bank_name": "Commonwealth Bank (CommBank) transaction export",
+      "verified": false,
+      "mapping": {
+        "has_header": false,
+        "date_column": 0,
+        "date_format": "%d/%m/%Y",
+        "description_columns": [
+          2
+        ],
+        "amount_column": 1
+      }
+    }
+  ],
+  "compliance": {
+    "disclaimer": "General information only. This app does not give financial product advice and has not considered your objectives, financial situation or needs. Think about whether the information suits your circumstances, and read the product disclosure statement before deciding on any financial product.",
+    "min_price_data_age_days": 0
+  }
+}

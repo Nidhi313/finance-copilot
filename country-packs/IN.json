@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "fy_start": {"month": 4, "day": 1},
+  "account_types": [
+    {"key": "nre", "label": "NRE account"},
+    {"key": "nro", "label": "NRO account"},
+    {"key": "fixed_deposit", "label": "Fixed deposit"},
+    {"key": "ppf", "label": "Public Provident Fund (PPF)"},
+    {"key": "epf", "label": "Employees' Provident Fund (EPF)"},
+    {"key": "nps", "label": "National Pension System (NPS)"}
+  ],
+  "calculator_labels": {
+    "regular_investing": "SIP (systematic investment plan)",
+    "loan_repayment": "EMI calculator"
+  },
+  "category_rules": [
+    {"pattern": "swiggy", "category": "Eating out"},
+    {"pattern": "zomato", "category": "Eating out"},
+    {"pattern": "bigbasket", "category": "Groceries"},
+    {"pattern": "blinkit", "category": "Groceries"},
+    {"pattern": "zepto", "category": "Groceries"},
+    {"pattern": "irctc", "category": "Travel"},
+    {"pattern": "uber", "category": "Transport"},
+    {"pattern": "jio", "category": "Utilities"},
+    {"pattern": "airtel", "category": "Utilities"},
+    {"pattern": "amazon", "category": "Shopping"},
+    {"pattern": "flipkart", "category": "Shopping"},
+    {"pattern": "myntra", "category": "Shopping"},
+    {"pattern": "netflix", "category": "Entertainment"},
+    {"pattern": "hotstar", "category": "Entertainment"},
+    {"pattern": "apollo pharmacy", "category": "Health"},
+    {"pattern": "salary", "category": "Income"}
+  ],
+  "csv_presets": [
+    {
+      "id": "hdfc_statement",
+      "bank_name": "HDFC Bank account statement (delimited)",
+      "verified": false,
+      "mapping": {
+        "has_header": true,
+        "date_column": "Date",
+        "date_format": "%d/%m/%y",
+        "description_columns": ["Narration"],
+        "debit_column": "Withdrawal Amt.",
+        "credit_column": "Deposit Amt."
+      }
+    }
+  ],
+  "compliance": {
+    "disclaimer": "For education and information only. This app is not registered with SEBI as an investment adviser or research analyst and does not give investment advice or recommendations. Any market data used for learning is at least three months old.",
+    "min_price_data_age_days": 90
+  }
+}
