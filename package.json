@@ -1,0 +1,12 @@
+{
+  "name": "finance-copilot",
+  "private": true,
+  "workspaces": ["packages/*", "web"],
+  "scripts": {
+    "gen:api": "npm run gen --workspace packages/api-client",
+    "dev": "npm run dev --workspace web",
+    "build": "npm run build --workspace web",
+    "test": "npm run test --workspace web",
+    "typecheck": "npm run typecheck --workspace web"
+  }
+}

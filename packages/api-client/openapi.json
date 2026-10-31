@@ -1,0 +1,4729 @@
+{
+ "openapi": "3.1.0",
+ "info": {
+  "title": "Finance Copilot API",
+  "description": "Track, plan, learn and practise across every country you live and bank in. Information and simulations only, never financial advice.",
+  "version": "0.1.0"
+ },
+ "paths": {
+  "/v1/countries": {
+   "get": {
+    "tags": [
+     "countries"
+    ],
+    "summary": "List Countries",
+    "description": "Every country. All have basic support; has_pack marks full support.",
+    "operationId": "list_countries_v1_countries_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "items": {
+          "$ref": "#/components/schemas/CountryOut"
+         },
+         "type": "array",
+         "title": "Response List Countries V1 Countries Get"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/v1/countries/{code}": {
+   "get": {
+    "tags": [
+     "countries"
+    ],
+    "summary": "Get Country",
+    "operationId": "get_country_v1_countries__code__get",
+    "parameters": [
+     {
+      "name": "code",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "title": "Code"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/CountryContextOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/v1/me": {
+   "get": {
+    "tags": [
+     "profile"
+    ],
+    "summary": "Get Me",
+    "operationId": "get_me_v1_me_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/MeOut"
+        }
+       }
+      }
+     }
+    }
+   },
+   "delete": {
+    "tags": [
+     "profile"
+    ],
+    "summary": "Delete Me",
+    "description": "Permanently delete your account and everything linked to it.",
+    "operationId": "delete_me_v1_me_delete",
+    "responses": {
+     "204": {
+      "description": "Successful Response"
+     }
+    }
+   },
+   "patch": {
+    "tags": [
+     "profile"
+    ],
+    "summary": "Update Me",
+    "operationId": "update_me_v1_me_patch",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/MeUpdate"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/MeOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/v1/me/countries/{code}": {
+   "put": {
+    "tags": [
+     "profile"
+    ],
+    "summary": "Link Country",
+    "description": "Add a country to your profile, or change your relationship to it. Any country works.",
+    "operationId": "link_country_v1_me_countries__code__put",
+    "parameters": [
+     {
+      "name": "code",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "title": "Code"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/CountryLinkIn"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/MeOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "delete": {
+    "tags": [
+     "profile"
+    ],
+    "summary": "Unlink Country",
+    "operationId": "unlink_country_v1_me_countries__code__delete",
+    "parameters": [
+     {
+      "name": "code",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "title": "Code"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/MeOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/v1/me/export": {
+   "get": {
+    "tags": [
+     "profile"
+    ],
+    "summary": "Export Data",
+    "description": "Everything stored about you, as a zip of CSV files.",
+    "operationId": "export_data_v1_me_export_get",
+    "responses": {
+     "200": {
+      "description": "Zip of CSV files",
+      "content": {
+       "application/zip": {}
+      }
+     }
+    }
+   }
+  },
+  "/v1/accounts": {
+   "get": {
+    "tags": [
+     "accounts"
+    ],
+    "summary": "List Accounts",
+    "operationId": "list_accounts_v1_accounts_get",
+    "parameters": [
+     {
+      "name": "country",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Country"
+      }
+     },
+     {
+      "name": "include_archived",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "boolean",
+       "default": false,
+       "title": "Include Archived"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "array",
+         "items": {
+          "$ref": "#/components/schemas/AccountOut"
+         },
+         "title": "Response List Accounts V1 Accounts Get"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "post": {
+    "tags": [
+     "accounts"
+    ],
+    "summary": "Create Account",
+    "operationId": "create_account_v1_accounts_post",
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/AccountIn"
+       }
+      }
+     }
+    },
+    "responses": {
+     "201": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/AccountOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/v1/accounts/{account_id}": {
+   "get": {
+    "tags": [
+     "accounts"
+    ],
+    "summary": "Get Account",
+    "operationId": "get_account_v1_accounts__account_id__get",
+    "parameters": [
+     {
+      "name": "account_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "format": "uuid",
+       "title": "Account Id"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/AccountOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "patch": {
+    "tags": [
+     "accounts"
+    ],
+    "summary": "Update Account",
+    "operationId": "update_account_v1_accounts__account_id__patch",
+    "parameters": [
+     {
+      "name": "account_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "format": "uuid",
+       "title": "Account Id"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/AccountUpdate"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/AccountOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "delete": {
+    "tags": [
+     "accounts"
+    ],
+    "summary": "Delete Account",
+    "description": "Deletes the account and all its transactions. Archive it instead to keep history.",
+    "operationId": "delete_account_v1_accounts__account_id__delete",
+    "parameters": [
+     {
+      "name": "account_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "format": "uuid",
+       "title": "Account Id"
+      }
+     }
+    ],
+    "responses": {
+     "204": {
+      "description": "Successful Response"
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/v1/categories": {
+   "get": {
+    "tags": [
+     "categories"
+    ],
+    "summary": "List Categories",
+    "operationId": "list_categories_v1_categories_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "items": {
+          "$ref": "#/components/schemas/CategoryOut"
+         },
+         "type": "array",
+         "title": "Response List Categories V1 Categories Get"
+        }
+       }
+      }
+     }
+    }
+   },
+   "post": {
+    "tags": [
+     "categories"
+    ],
+    "summary": "Create Category",
+    "operationId": "create_category_v1_categories_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/CategoryIn"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "201": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/CategoryOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/v1/categories/{category_id}": {
+   "delete": {
+    "tags": [
+     "categories"
+    ],
+    "summary": "Delete Category",
+    "operationId": "delete_category_v1_categories__category_id__delete",
+    "parameters": [
+     {
+      "name": "category_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "format": "uuid",
+       "title": "Category Id"
+      }
+     }
+    ],
+    "responses": {
+     "204": {
+      "description": "Successful Response"
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/v1/category-rules": {
+   "get": {
+    "tags": [
+     "categories"
+    ],
+    "summary": "List Rules",
+    "operationId": "list_rules_v1_category_rules_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "items": {
+          "$ref": "#/components/schemas/RuleOut"
+         },
+         "type": "array",
+         "title": "Response List Rules V1 Category Rules Get"
+        }
+       }
+      }
+     }
+    }
+   },
+   "post": {
+    "tags": [
+     "categories"
+    ],
+    "summary": "Create Rule",
+    "operationId": "create_rule_v1_category_rules_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/RuleIn"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "201": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/RuleOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/v1/category-rules/{rule_id}": {
+   "delete": {
+    "tags": [
+     "categories"
+    ],
+    "summary": "Delete Rule",
+    "operationId": "delete_rule_v1_category_rules__rule_id__delete",
+    "parameters": [
+     {
+      "name": "rule_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "format": "uuid",
+       "title": "Rule Id"
+      }
+     }
+    ],
+    "responses": {
+     "204": {
+      "description": "Successful Response"
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/v1/category-rules/apply": {
+   "post": {
+    "tags": [
+     "categories"
+    ],
+    "summary": "Apply Rules",
+    "description": "Categorise every uncategorised transaction using your rules and the country defaults.",
+    "operationId": "apply_rules_v1_category_rules_apply_post",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ApplyRulesOut"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/v1/transactions": {
+   "get": {
+    "tags": [
+     "transactions"
+    ],
+    "summary": "List Transactions",
+    "operationId": "list_transactions_v1_transactions_get",
+    "parameters": [
+     {
+      "name": "account_id",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string",
+         "format": "uuid"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Account Id"
+      }
+     },
+     {
+      "name": "country",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Country"
+      }
+     },
+     {
+      "name": "category_id",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string",
+         "format": "uuid"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Category Id"
+      }
+     },
+     {
+      "name": "uncategorised",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "boolean",
+       "default": false,
+       "title": "Uncategorised"
+      }
+     },
+     {
+      "name": "date_from",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string",
+         "format": "date"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Date From"
+      }
+     },
+     {
+      "name": "date_to",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string",
+         "format": "date"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Date To"
+      }
+     },
+     {
+      "name": "search",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string",
+         "maxLength": 100
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Search"
+      }
+     },
+     {
+      "name": "limit",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer",
+       "maximum": 500,
+       "minimum": 1,
+       "default": 50,
+       "title": "Limit"
+      }
+     },
+     {
+      "name": "offset",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer",
+       "minimum": 0,
+       "default": 0,
+       "title": "Offset"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Page_TransactionOut_"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "post": {
+    "tags": [
+     "transactions"
+    ],
+    "summary": "Create Transaction",
+    "operationId": "create_transaction_v1_transactions_post",
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/TransactionIn"
+       }
+      }
+     }
+    },
+    "responses": {
+     "201": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/TransactionOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/v1/transactions/{txn_id}": {
+   "patch": {
+    "tags": [
+     "transactions"
+    ],
+    "summary": "Update Transaction",
+    "operationId": "update_transaction_v1_transactions__txn_id__patch",
+    "parameters": [
+     {
+      "name": "txn_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "format": "uuid",
+       "title": "Txn Id"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/TransactionUpdate"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/TransactionOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "delete": {
+    "tags": [
+     "transactions"
+    ],
+    "summary": "Delete Transaction",
+    "operationId": "delete_transaction_v1_transactions__txn_id__delete",
+    "parameters": [
+     {
+      "name": "txn_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "format": "uuid",
+       "title": "Txn Id"
+      }
+     }
+    ],
+    "responses": {
+     "204": {
+      "description": "Successful Response"
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/v1/imports/preview": {
+   "post": {
+    "tags": [
+     "imports"
+    ],
+    "summary": "Preview Import",
+    "description": "Parse the file and show what would be imported. Nothing is saved.",
+    "operationId": "preview_import_v1_imports_preview_post",
+    "requestBody": {
+     "content": {
+      "multipart/form-data": {
+       "schema": {
+        "$ref": "#/components/schemas/Body_preview_import_v1_imports_preview_post"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ImportPreviewOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/v1/imports": {
+   "get": {
+    "tags": [
+     "imports"
+    ],
+    "summary": "List Imports",
+    "operationId": "list_imports_v1_imports_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "items": {
+          "$ref": "#/components/schemas/ImportOut"
+         },
+         "type": "array",
+         "title": "Response List Imports V1 Imports Get"
+        }
+       }
+      }
+     }
+    }
+   },
+   "post": {
+    "tags": [
+     "imports"
+    ],
+    "summary": "Run Import",
+    "description": "Import the file into the account. Safe to repeat: rows already imported are skipped.",
+    "operationId": "run_import_v1_imports_post",
+    "requestBody": {
+     "content": {
+      "multipart/form-data": {
+       "schema": {
+        "$ref": "#/components/schemas/Body_run_import_v1_imports_post"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "201": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ImportResultOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/v1/csv-mappings": {
+   "get": {
+    "tags": [
+     "imports"
+    ],
+    "summary": "List Saved Mappings",
+    "operationId": "list_saved_mappings_v1_csv_mappings_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "items": {
+          "$ref": "#/components/schemas/SavedMappingOut"
+         },
+         "type": "array",
+         "title": "Response List Saved Mappings V1 Csv Mappings Get"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/v1/csv-mappings/{mapping_id}": {
+   "delete": {
+    "tags": [
+     "imports"
+    ],
+    "summary": "Delete Saved Mapping",
+    "operationId": "delete_saved_mapping_v1_csv_mappings__mapping_id__delete",
+    "parameters": [
+     {
+      "name": "mapping_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "format": "uuid",
+       "title": "Mapping Id"
+      }
+     }
+    ],
+    "responses": {
+     "204": {
+      "description": "Successful Response"
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/v1/budgets": {
+   "get": {
+    "tags": [
+     "budgets"
+    ],
+    "summary": "List Budgets",
+    "operationId": "list_budgets_v1_budgets_get",
+    "parameters": [
+     {
+      "name": "country",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Country"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "array",
+         "items": {
+          "$ref": "#/components/schemas/BudgetOut"
+         },
+         "title": "Response List Budgets V1 Budgets Get"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "put": {
+    "tags": [
+     "budgets"
+    ],
+    "summary": "Upsert Budget",
+    "description": "Create or change the monthly budget for one category in one country.",
+    "operationId": "upsert_budget_v1_budgets_put",
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/BudgetIn"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/BudgetOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/v1/budgets/{budget_id}": {
+   "delete": {
+    "tags": [
+     "budgets"
+    ],
+    "summary": "Delete Budget",
+    "operationId": "delete_budget_v1_budgets__budget_id__delete",
+    "parameters": [
+     {
+      "name": "budget_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "format": "uuid",
+       "title": "Budget Id"
+      }
+     }
+    ],
+    "responses": {
+     "204": {
+      "description": "Successful Response"
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/v1/budgets/status": {
+   "get": {
+    "tags": [
+     "budgets"
+    ],
+    "summary": "Budget Status",
+    "description": "Spent vs remaining for each budget in a country, for one month (default: this month).",
+    "operationId": "budget_status_v1_budgets_status_get",
+    "parameters": [
+     {
+      "name": "country",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "title": "Country"
+      }
+     },
+     {
+      "name": "month",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string",
+         "pattern": "^\\d{4}-\\d{2}$"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Month"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "array",
+         "items": {
+          "$ref": "#/components/schemas/BudgetStatusOut"
+         },
+         "title": "Response Budget Status V1 Budgets Status Get"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/v1/reports/net-worth": {
+   "get": {
+    "tags": [
+     "reports"
+    ],
+    "summary": "Net Worth",
+    "description": "Everything you hold across all your countries, in one currency (default: your home currency).\nAccounts whose currency has no exchange rate yet are listed but left out of the total.",
+    "operationId": "net_worth_v1_reports_net_worth_get",
+    "parameters": [
+     {
+      "name": "currency",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string",
+         "pattern": "^[A-Z]{3}$"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Currency"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/NetWorthOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/v1/reports/spending": {
+   "get": {
+    "tags": [
+     "reports"
+    ],
+    "summary": "Spending",
+    "description": "Spending by category for one month, and income vs spending for the months before it.",
+    "operationId": "spending_v1_reports_spending_get",
+    "parameters": [
+     {
+      "name": "country",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "title": "Country"
+      }
+     },
+     {
+      "name": "month",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string",
+         "pattern": "^\\d{4}-\\d{2}$"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Month"
+      }
+     },
+     {
+      "name": "currency",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string",
+         "pattern": "^[A-Z]{3}$"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Currency"
+      }
+     },
+     {
+      "name": "months",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer",
+       "maximum": 24,
+       "minimum": 1,
+       "default": 6,
+       "title": "Months"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/SpendingOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/v1/remittances": {
+   "get": {
+    "tags": [
+     "remittances"
+    ],
+    "summary": "List Remittances",
+    "operationId": "list_remittances_v1_remittances_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "items": {
+          "$ref": "#/components/schemas/RemittanceOut"
+         },
+         "type": "array",
+         "title": "Response List Remittances V1 Remittances Get"
+        }
+       }
+      }
+     }
+    }
+   },
+   "post": {
+    "tags": [
+     "remittances"
+    ],
+    "summary": "Create Remittance",
+    "operationId": "create_remittance_v1_remittances_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/RemittanceIn"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "201": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/RemittanceOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/v1/remittances/{remittance_id}": {
+   "delete": {
+    "tags": [
+     "remittances"
+    ],
+    "summary": "Delete Remittance",
+    "operationId": "delete_remittance_v1_remittances__remittance_id__delete",
+    "parameters": [
+     {
+      "name": "remittance_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "format": "uuid",
+       "title": "Remittance Id"
+      }
+     }
+    ],
+    "responses": {
+     "204": {
+      "description": "Successful Response"
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/v1/remittances/summary": {
+   "get": {
+    "tags": [
+     "remittances"
+    ],
+    "summary": "Remittance Summary",
+    "description": "Totals across all transfers, in one currency (default: your home currency).",
+    "operationId": "remittance_summary_v1_remittances_summary_get",
+    "parameters": [
+     {
+      "name": "currency",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string",
+         "pattern": "^[A-Z]{3}$"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Currency"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/RemittanceSummaryOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/v1/goals": {
+   "get": {
+    "tags": [
+     "goals"
+    ],
+    "summary": "List Goals",
+    "operationId": "list_goals_v1_goals_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "items": {
+          "$ref": "#/components/schemas/GoalOut"
+         },
+         "type": "array",
+         "title": "Response List Goals V1 Goals Get"
+        }
+       }
+      }
+     }
+    }
+   },
+   "post": {
+    "tags": [
+     "goals"
+    ],
+    "summary": "Create Goal",
+    "operationId": "create_goal_v1_goals_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/GoalIn"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "201": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/GoalOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/v1/goals/{goal_id}": {
+   "put": {
+    "tags": [
+     "goals"
+    ],
+    "summary": "Update Goal",
+    "operationId": "update_goal_v1_goals__goal_id__put",
+    "parameters": [
+     {
+      "name": "goal_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "format": "uuid",
+       "title": "Goal Id"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/GoalIn"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/GoalOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "delete": {
+    "tags": [
+     "goals"
+    ],
+    "summary": "Delete Goal",
+    "operationId": "delete_goal_v1_goals__goal_id__delete",
+    "parameters": [
+     {
+      "name": "goal_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "format": "uuid",
+       "title": "Goal Id"
+      }
+     }
+    ],
+    "responses": {
+     "204": {
+      "description": "Successful Response"
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/v1/calculators/compound-growth": {
+   "post": {
+    "tags": [
+     "calculators"
+    ],
+    "summary": "Compound Growth",
+    "operationId": "compound_growth_v1_calculators_compound_growth_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/CompoundGrowthIn"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/CalcOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/v1/calculators/regular-investing": {
+   "post": {
+    "tags": [
+     "calculators"
+    ],
+    "summary": "Regular Investing",
+    "operationId": "regular_investing_v1_calculators_regular_investing_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/RegularInvestingIn"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/CalcOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/v1/calculators/loan-repayment": {
+   "post": {
+    "tags": [
+     "calculators"
+    ],
+    "summary": "Loan Repayment",
+    "operationId": "loan_repayment_v1_calculators_loan_repayment_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/LoanRepaymentIn"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/CalcOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/v1/calculators/emergency-fund": {
+   "post": {
+    "tags": [
+     "calculators"
+    ],
+    "summary": "Emergency Fund",
+    "description": "Uses your own data for anything you leave empty: average spending over the last\n3 full months, and the balance of your savings and cash accounts in that country.",
+    "operationId": "emergency_fund_v1_calculators_emergency_fund_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/EmergencyFundIn"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/CalcOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/v1/fx/rate": {
+   "get": {
+    "tags": [
+     "fx"
+    ],
+    "summary": "Get Rate",
+    "operationId": "get_rate_v1_fx_rate_get",
+    "parameters": [
+     {
+      "name": "base",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "pattern": "^[A-Z]{3}$",
+       "title": "Base"
+      }
+     },
+     {
+      "name": "quote",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "pattern": "^[A-Z]{3}$",
+       "title": "Quote"
+      }
+     },
+     {
+      "name": "on",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string",
+         "format": "date"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "On"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/FxRateOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/v1/admin/country-packs": {
+   "get": {
+    "tags": [
+     "admin"
+    ],
+    "summary": "List Packs",
+    "operationId": "list_packs_v1_admin_country_packs_get",
+    "parameters": [
+     {
+      "name": "country",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Country"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "array",
+         "items": {
+          "$ref": "#/components/schemas/PackOut"
+         },
+         "title": "Response List Packs V1 Admin Country Packs Get"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "post": {
+    "tags": [
+     "admin"
+    ],
+    "summary": "Create Pack Draft",
+    "description": "Create a new draft version of a country's pack. It does nothing until activated.",
+    "operationId": "create_pack_draft_v1_admin_country_packs_post",
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/PackIn"
+       }
+      }
+     }
+    },
+    "responses": {
+     "201": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/PackOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/v1/admin/country-packs/{pack_id}/activate": {
+   "post": {
+    "tags": [
+     "admin"
+    ],
+    "summary": "Activate",
+    "description": "Make this version live for its country. The previous active version is retired, not deleted.",
+    "operationId": "activate_v1_admin_country_packs__pack_id__activate_post",
+    "parameters": [
+     {
+      "name": "pack_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "format": "uuid",
+       "title": "Pack Id"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/PackOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/v1/admin/fx/refresh": {
+   "post": {
+    "tags": [
+     "admin"
+    ],
+    "summary": "Fx Refresh",
+    "description": "Trigger the exchange-rate job by hand. Normally it runs on a schedule.",
+    "operationId": "fx_refresh_v1_admin_fx_refresh_post",
+    "parameters": [
+     {
+      "name": "days",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer",
+       "maximum": 800,
+       "minimum": 1,
+       "default": 7,
+       "title": "Days"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/health": {
+   "get": {
+    "tags": [
+     "ops"
+    ],
+    "summary": "Health",
+    "description": "Liveness: the process is up.",
+    "operationId": "health_health_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     }
+    }
+   }
+  },
+  "/ready": {
+   "get": {
+    "tags": [
+     "ops"
+    ],
+    "summary": "Ready",
+    "description": "Readiness: the database answers.",
+    "operationId": "ready_ready_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     }
+    }
+   }
+  }
+ },
+ "components": {
+  "schemas": {
+   "AccountIn": {
+    "properties": {
+     "country_code": {
+      "type": "string",
+      "pattern": "^[A-Z]{2}$",
+      "title": "Country Code"
+     },
+     "name": {
+      "type": "string",
+      "maxLength": 100,
+      "minLength": 1,
+      "title": "Name"
+     },
+     "type": {
+      "type": "string",
+      "title": "Type"
+     },
+     "currency": {
+      "anyOf": [
+       {
+        "type": "string",
+        "pattern": "^[A-Z]{3}$"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Currency"
+     },
+     "institution": {
+      "type": "string",
+      "maxLength": 100,
+      "title": "Institution",
+      "default": ""
+     },
+     "opening_balance": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "string"
+       }
+      ],
+      "title": "Opening Balance",
+      "default": "0"
+     }
+    },
+    "type": "object",
+    "required": [
+     "country_code",
+     "name",
+     "type"
+    ],
+    "title": "AccountIn"
+   },
+   "AccountOut": {
+    "properties": {
+     "id": {
+      "type": "string",
+      "format": "uuid",
+      "title": "Id"
+     },
+     "country_code": {
+      "type": "string",
+      "title": "Country Code"
+     },
+     "name": {
+      "type": "string",
+      "title": "Name"
+     },
+     "type": {
+      "type": "string",
+      "title": "Type"
+     },
+     "currency": {
+      "type": "string",
+      "title": "Currency"
+     },
+     "institution": {
+      "type": "string",
+      "title": "Institution"
+     },
+     "opening_balance": {
+      "type": "string",
+      "title": "Opening Balance"
+     },
+     "archived": {
+      "type": "boolean",
+      "title": "Archived"
+     },
+     "balance": {
+      "type": "string",
+      "title": "Balance",
+      "default": "0"
+     }
+    },
+    "type": "object",
+    "required": [
+     "id",
+     "country_code",
+     "name",
+     "type",
+     "currency",
+     "institution",
+     "opening_balance",
+     "archived"
+    ],
+    "title": "AccountOut"
+   },
+   "AccountType": {
+    "properties": {
+     "key": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]{1,29}$",
+      "title": "Key"
+     },
+     "label": {
+      "type": "string",
+      "maxLength": 50,
+      "minLength": 1,
+      "title": "Label"
+     }
+    },
+    "additionalProperties": false,
+    "type": "object",
+    "required": [
+     "key",
+     "label"
+    ],
+    "title": "AccountType"
+   },
+   "AccountUpdate": {
+    "properties": {
+     "name": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 100,
+        "minLength": 1
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Name"
+     },
+     "type": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Type"
+     },
+     "institution": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 100
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Institution"
+     },
+     "opening_balance": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Opening Balance"
+     },
+     "archived": {
+      "anyOf": [
+       {
+        "type": "boolean"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Archived"
+     }
+    },
+    "type": "object",
+    "title": "AccountUpdate"
+   },
+   "ApplyRulesOut": {
+    "properties": {
+     "categorised": {
+      "type": "integer",
+      "title": "Categorised"
+     },
+     "still_uncategorised": {
+      "type": "integer",
+      "title": "Still Uncategorised"
+     }
+    },
+    "type": "object",
+    "required": [
+     "categorised",
+     "still_uncategorised"
+    ],
+    "title": "ApplyRulesOut"
+   },
+   "Body_preview_import_v1_imports_preview_post": {
+    "properties": {
+     "file": {
+      "type": "string",
+      "contentMediaType": "application/octet-stream",
+      "title": "File"
+     },
+     "account_id": {
+      "type": "string",
+      "format": "uuid",
+      "title": "Account Id"
+     },
+     "preset_id": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Preset Id"
+     },
+     "mapping": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Mapping",
+      "description": "CsvMapping as JSON"
+     },
+     "saved_mapping_id": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "uuid"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Saved Mapping Id"
+     }
+    },
+    "type": "object",
+    "required": [
+     "file",
+     "account_id"
+    ],
+    "title": "Body_preview_import_v1_imports_preview_post"
+   },
+   "Body_run_import_v1_imports_post": {
+    "properties": {
+     "file": {
+      "type": "string",
+      "contentMediaType": "application/octet-stream",
+      "title": "File"
+     },
+     "account_id": {
+      "type": "string",
+      "format": "uuid",
+      "title": "Account Id"
+     },
+     "preset_id": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Preset Id"
+     },
+     "mapping": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Mapping"
+     },
+     "saved_mapping_id": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "uuid"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Saved Mapping Id"
+     },
+     "save_mapping_as": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 100
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Save Mapping As"
+     }
+    },
+    "type": "object",
+    "required": [
+     "file",
+     "account_id"
+    ],
+    "title": "Body_run_import_v1_imports_post"
+   },
+   "BudgetIn": {
+    "properties": {
+     "country_code": {
+      "type": "string",
+      "pattern": "^[A-Z]{2}$",
+      "title": "Country Code"
+     },
+     "category_id": {
+      "type": "string",
+      "format": "uuid",
+      "title": "Category Id"
+     },
+     "amount": {
+      "anyOf": [
+       {
+        "type": "number",
+        "minimum": 0.0
+       },
+       {
+        "type": "string"
+       }
+      ],
+      "title": "Amount"
+     },
+     "currency": {
+      "anyOf": [
+       {
+        "type": "string",
+        "pattern": "^[A-Z]{3}$"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Currency"
+     }
+    },
+    "type": "object",
+    "required": [
+     "country_code",
+     "category_id",
+     "amount"
+    ],
+    "title": "BudgetIn"
+   },
+   "BudgetOut": {
+    "properties": {
+     "id": {
+      "type": "string",
+      "format": "uuid",
+      "title": "Id"
+     },
+     "country_code": {
+      "type": "string",
+      "title": "Country Code"
+     },
+     "category_id": {
+      "type": "string",
+      "format": "uuid",
+      "title": "Category Id"
+     },
+     "amount": {
+      "type": "string",
+      "title": "Amount"
+     },
+     "currency": {
+      "type": "string",
+      "title": "Currency"
+     }
+    },
+    "type": "object",
+    "required": [
+     "id",
+     "country_code",
+     "category_id",
+     "amount",
+     "currency"
+    ],
+    "title": "BudgetOut"
+   },
+   "BudgetStatusOut": {
+    "properties": {
+     "budget_id": {
+      "type": "string",
+      "format": "uuid",
+      "title": "Budget Id"
+     },
+     "category_id": {
+      "type": "string",
+      "format": "uuid",
+      "title": "Category Id"
+     },
+     "category": {
+      "type": "string",
+      "title": "Category"
+     },
+     "currency": {
+      "type": "string",
+      "title": "Currency"
+     },
+     "budget": {
+      "type": "string",
+      "title": "Budget"
+     },
+     "spent": {
+      "type": "string",
+      "title": "Spent"
+     },
+     "remaining": {
+      "type": "string",
+      "title": "Remaining"
+     },
+     "percent_used": {
+      "type": "string",
+      "title": "Percent Used"
+     }
+    },
+    "type": "object",
+    "required": [
+     "budget_id",
+     "category_id",
+     "category",
+     "currency",
+     "budget",
+     "spent",
+     "remaining",
+     "percent_used"
+    ],
+    "title": "BudgetStatusOut"
+   },
+   "CalcOut": {
+    "properties": {
+     "calculator": {
+      "type": "string",
+      "title": "Calculator"
+     },
+     "label": {
+      "type": "string",
+      "title": "Label"
+     },
+     "currency": {
+      "type": "string",
+      "title": "Currency"
+     },
+     "disclaimer": {
+      "type": "string",
+      "title": "Disclaimer"
+     },
+     "inputs": {
+      "additionalProperties": true,
+      "type": "object",
+      "title": "Inputs"
+     },
+     "result": {
+      "additionalProperties": true,
+      "type": "object",
+      "title": "Result"
+     }
+    },
+    "type": "object",
+    "required": [
+     "calculator",
+     "label",
+     "currency",
+     "disclaimer",
+     "inputs",
+     "result"
+    ],
+    "title": "CalcOut"
+   },
+   "CategoryIn": {
+    "properties": {
+     "name": {
+      "type": "string",
+      "maxLength": 50,
+      "minLength": 1,
+      "title": "Name"
+     },
+     "kind": {
+      "type": "string",
+      "enum": [
+       "expense",
+       "income",
+       "transfer"
+      ],
+      "title": "Kind",
+      "default": "expense"
+     }
+    },
+    "type": "object",
+    "required": [
+     "name"
+    ],
+    "title": "CategoryIn"
+   },
+   "CategoryOut": {
+    "properties": {
+     "id": {
+      "type": "string",
+      "format": "uuid",
+      "title": "Id"
+     },
+     "name": {
+      "type": "string",
+      "title": "Name"
+     },
+     "kind": {
+      "type": "string",
+      "title": "Kind"
+     },
+     "is_default": {
+      "type": "boolean",
+      "title": "Is Default",
+      "default": false
+     }
+    },
+    "type": "object",
+    "required": [
+     "id",
+     "name",
+     "kind"
+    ],
+    "title": "CategoryOut"
+   },
+   "CompoundGrowthIn": {
+    "properties": {
+     "country_code": {
+      "type": "string",
+      "pattern": "^[A-Z]{2}$",
+      "title": "Country Code"
+     },
+     "principal": {
+      "anyOf": [
+       {
+        "type": "number",
+        "minimum": 0.0
+       },
+       {
+        "type": "string"
+       }
+      ],
+      "title": "Principal",
+      "default": "0"
+     },
+     "monthly_contribution": {
+      "anyOf": [
+       {
+        "type": "number",
+        "minimum": 0.0
+       },
+       {
+        "type": "string"
+       }
+      ],
+      "title": "Monthly Contribution",
+      "default": "0"
+     },
+     "annual_rate_pct": {
+      "anyOf": [
+       {
+        "type": "number",
+        "maximum": 100.0,
+        "minimum": 0.0
+       },
+       {
+        "type": "string"
+       }
+      ],
+      "title": "Annual Rate Pct"
+     },
+     "years": {
+      "type": "integer",
+      "maximum": 60.0,
+      "minimum": 1.0,
+      "title": "Years"
+     }
+    },
+    "type": "object",
+    "required": [
+     "country_code",
+     "annual_rate_pct",
+     "years"
+    ],
+    "title": "CompoundGrowthIn"
+   },
+   "CountryContextOut": {
+    "properties": {
+     "code": {
+      "type": "string",
+      "title": "Code"
+     },
+     "name": {
+      "type": "string",
+      "title": "Name"
+     },
+     "currency": {
+      "type": "string",
+      "title": "Currency"
+     },
+     "locale": {
+      "type": "string",
+      "title": "Locale"
+     },
+     "has_pack": {
+      "type": "boolean",
+      "title": "Has Pack"
+     },
+     "pack_version": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Pack Version"
+     },
+     "fy_start": {
+      "$ref": "#/components/schemas/FyStart"
+     },
+     "account_types": {
+      "items": {
+       "$ref": "#/components/schemas/AccountType"
+      },
+      "type": "array",
+      "title": "Account Types"
+     },
+     "calculator_labels": {
+      "additionalProperties": {
+       "type": "string"
+      },
+      "type": "object",
+      "title": "Calculator Labels"
+     },
+     "csv_presets": {
+      "items": {
+       "$ref": "#/components/schemas/CsvPreset"
+      },
+      "type": "array",
+      "title": "Csv Presets"
+     },
+     "disclaimer": {
+      "type": "string",
+      "title": "Disclaimer"
+     }
+    },
+    "type": "object",
+    "required": [
+     "code",
+     "name",
+     "currency",
+     "locale",
+     "has_pack",
+     "pack_version",
+     "fy_start",
+     "account_types",
+     "calculator_labels",
+     "csv_presets",
+     "disclaimer"
+    ],
+    "title": "CountryContextOut"
+   },
+   "CountryLinkIn": {
+    "properties": {
+     "relationships": {
+      "items": {
+       "type": "string",
+       "enum": [
+        "tax_resident",
+        "citizen",
+        "lives_here",
+        "holds_accounts",
+        "sends_money_to"
+       ]
+      },
+      "type": "array",
+      "title": "Relationships"
+     }
+    },
+    "type": "object",
+    "title": "CountryLinkIn"
+   },
+   "CountryLinkOut": {
+    "properties": {
+     "country_code": {
+      "type": "string",
+      "title": "Country Code"
+     },
+     "relationships": {
+      "items": {
+       "type": "string"
+      },
+      "type": "array",
+      "title": "Relationships"
+     }
+    },
+    "type": "object",
+    "required": [
+     "country_code",
+     "relationships"
+    ],
+    "title": "CountryLinkOut"
+   },
+   "CountryOut": {
+    "properties": {
+     "code": {
+      "type": "string",
+      "title": "Code"
+     },
+     "name": {
+      "type": "string",
+      "title": "Name"
+     },
+     "currency": {
+      "type": "string",
+      "title": "Currency"
+     },
+     "locale": {
+      "type": "string",
+      "title": "Locale"
+     },
+     "has_pack": {
+      "type": "boolean",
+      "title": "Has Pack",
+      "default": false
+     }
+    },
+    "type": "object",
+    "required": [
+     "code",
+     "name",
+     "currency",
+     "locale"
+    ],
+    "title": "CountryOut"
+   },
+   "CsvMapping": {
+    "properties": {
+     "has_header": {
+      "type": "boolean",
+      "title": "Has Header",
+      "default": true
+     },
+     "delimiter": {
+      "type": "string",
+      "maxLength": 1,
+      "minLength": 1,
+      "title": "Delimiter",
+      "default": ","
+     },
+     "date_column": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "integer"
+       }
+      ],
+      "title": "Date Column"
+     },
+     "date_format": {
+      "type": "string",
+      "title": "Date Format",
+      "default": "%d/%m/%Y"
+     },
+     "description_columns": {
+      "items": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "integer"
+        }
+       ]
+      },
+      "type": "array",
+      "minItems": 1,
+      "title": "Description Columns"
+     },
+     "amount_column": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Amount Column"
+     },
+     "debit_column": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Debit Column"
+     },
+     "credit_column": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Credit Column"
+     },
+     "invert_amounts": {
+      "type": "boolean",
+      "title": "Invert Amounts",
+      "default": false
+     },
+     "decimal_separator": {
+      "type": "string",
+      "enum": [
+       ".",
+       ","
+      ],
+      "title": "Decimal Separator",
+      "default": "."
+     }
+    },
+    "additionalProperties": false,
+    "type": "object",
+    "required": [
+     "date_column",
+     "description_columns"
+    ],
+    "title": "CsvMapping",
+    "description": "How to read one bank's CSV export. Columns are header names when the file\nhas a header row, or 0-based positions when it does not."
+   },
+   "CsvPreset": {
+    "properties": {
+     "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9_]{2,50}$",
+      "title": "Id"
+     },
+     "bank_name": {
+      "type": "string",
+      "title": "Bank Name"
+     },
+     "verified": {
+      "type": "boolean",
+      "title": "Verified",
+      "default": false
+     },
+     "mapping": {
+      "$ref": "#/components/schemas/CsvMapping"
+     }
+    },
+    "additionalProperties": false,
+    "type": "object",
+    "required": [
+     "id",
+     "bank_name",
+     "mapping"
+    ],
+    "title": "CsvPreset"
+   },
+   "EmergencyFundIn": {
+    "properties": {
+     "country_code": {
+      "type": "string",
+      "pattern": "^[A-Z]{2}$",
+      "title": "Country Code"
+     },
+     "months_target": {
+      "type": "integer",
+      "maximum": 24.0,
+      "minimum": 1.0,
+      "title": "Months Target",
+      "default": 6
+     },
+     "monthly_expenses": {
+      "anyOf": [
+       {
+        "type": "number",
+        "minimum": 0.0
+       },
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Monthly Expenses",
+      "description": "Leave empty to use your average spending over the last 3 full months"
+     },
+     "current_savings": {
+      "anyOf": [
+       {
+        "type": "number",
+        "minimum": 0.0
+       },
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Current Savings",
+      "description": "Leave empty to use the balance of your savings and cash accounts"
+     }
+    },
+    "type": "object",
+    "required": [
+     "country_code"
+    ],
+    "title": "EmergencyFundIn"
+   },
+   "FxRateOut": {
+    "properties": {
+     "base": {
+      "type": "string",
+      "title": "Base"
+     },
+     "quote": {
+      "type": "string",
+      "title": "Quote"
+     },
+     "date": {
+      "type": "string",
+      "format": "date",
+      "title": "Date"
+     },
+     "rate": {
+      "type": "string",
+      "title": "Rate"
+     },
+     "rates_as_of": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "date"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Rates As Of"
+     }
+    },
+    "type": "object",
+    "required": [
+     "base",
+     "quote",
+     "date",
+     "rate",
+     "rates_as_of"
+    ],
+    "title": "FxRateOut"
+   },
+   "FyStart": {
+    "properties": {
+     "month": {
+      "type": "integer",
+      "maximum": 12.0,
+      "minimum": 1.0,
+      "title": "Month"
+     },
+     "day": {
+      "type": "integer",
+      "maximum": 31.0,
+      "minimum": 1.0,
+      "title": "Day"
+     }
+    },
+    "additionalProperties": false,
+    "type": "object",
+    "required": [
+     "month",
+     "day"
+    ],
+    "title": "FyStart"
+   },
+   "GoalIn": {
+    "properties": {
+     "name": {
+      "type": "string",
+      "maxLength": 100,
+      "minLength": 1,
+      "title": "Name"
+     },
+     "target_amount": {
+      "anyOf": [
+       {
+        "type": "number",
+        "minimum": 0.0
+       },
+       {
+        "type": "string"
+       }
+      ],
+      "title": "Target Amount"
+     },
+     "currency": {
+      "type": "string",
+      "pattern": "^[A-Z]{3}$",
+      "title": "Currency"
+     },
+     "target_date": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "date"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Target Date"
+     },
+     "account_id": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "uuid"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Account Id"
+     },
+     "saved_amount": {
+      "anyOf": [
+       {
+        "type": "number",
+        "minimum": 0.0
+       },
+       {
+        "type": "string"
+       }
+      ],
+      "title": "Saved Amount",
+      "default": "0"
+     }
+    },
+    "type": "object",
+    "required": [
+     "name",
+     "target_amount",
+     "currency"
+    ],
+    "title": "GoalIn"
+   },
+   "GoalOut": {
+    "properties": {
+     "id": {
+      "type": "string",
+      "format": "uuid",
+      "title": "Id"
+     },
+     "name": {
+      "type": "string",
+      "title": "Name"
+     },
+     "target_amount": {
+      "type": "string",
+      "title": "Target Amount"
+     },
+     "currency": {
+      "type": "string",
+      "title": "Currency"
+     },
+     "target_date": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "date"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Target Date"
+     },
+     "account_id": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "uuid"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Account Id"
+     },
+     "saved_amount": {
+      "type": "string",
+      "title": "Saved Amount"
+     },
+     "current": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Current"
+     },
+     "percent": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Percent"
+     },
+     "monthly_needed": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Monthly Needed"
+     }
+    },
+    "type": "object",
+    "required": [
+     "id",
+     "name",
+     "target_amount",
+     "currency",
+     "target_date",
+     "account_id",
+     "saved_amount"
+    ],
+    "title": "GoalOut"
+   },
+   "HTTPValidationError": {
+    "properties": {
+     "detail": {
+      "items": {
+       "$ref": "#/components/schemas/ValidationError"
+      },
+      "type": "array",
+      "title": "Detail"
+     }
+    },
+    "type": "object",
+    "title": "HTTPValidationError"
+   },
+   "ImportOut": {
+    "properties": {
+     "id": {
+      "type": "string",
+      "format": "uuid",
+      "title": "Id"
+     },
+     "account_id": {
+      "type": "string",
+      "format": "uuid",
+      "title": "Account Id"
+     },
+     "filename": {
+      "type": "string",
+      "title": "Filename"
+     },
+     "source": {
+      "type": "string",
+      "title": "Source"
+     },
+     "rows_total": {
+      "type": "integer",
+      "title": "Rows Total"
+     },
+     "rows_imported": {
+      "type": "integer",
+      "title": "Rows Imported"
+     },
+     "rows_duplicate": {
+      "type": "integer",
+      "title": "Rows Duplicate"
+     },
+     "rows_failed": {
+      "type": "integer",
+      "title": "Rows Failed"
+     }
+    },
+    "type": "object",
+    "required": [
+     "id",
+     "account_id",
+     "filename",
+     "source",
+     "rows_total",
+     "rows_imported",
+     "rows_duplicate",
+     "rows_failed"
+    ],
+    "title": "ImportOut"
+   },
+   "ImportPreviewOut": {
+    "properties": {
+     "header": {
+      "anyOf": [
+       {
+        "items": {
+         "type": "string"
+        },
+        "type": "array"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Header"
+     },
+     "rows": {
+      "items": {
+       "$ref": "#/components/schemas/ImportRowOut"
+      },
+      "type": "array",
+      "title": "Rows"
+     },
+     "total_lines": {
+      "type": "integer",
+      "title": "Total Lines"
+     },
+     "parsed": {
+      "type": "integer",
+      "title": "Parsed"
+     },
+     "errors": {
+      "items": {
+       "additionalProperties": true,
+       "type": "object"
+      },
+      "type": "array",
+      "title": "Errors"
+     }
+    },
+    "type": "object",
+    "required": [
+     "header",
+     "rows",
+     "total_lines",
+     "parsed",
+     "errors"
+    ],
+    "title": "ImportPreviewOut"
+   },
+   "ImportResultOut": {
+    "properties": {
+     "import": {
+      "$ref": "#/components/schemas/ImportOut"
+     },
+     "errors": {
+      "items": {
+       "additionalProperties": true,
+       "type": "object"
+      },
+      "type": "array",
+      "title": "Errors"
+     }
+    },
+    "type": "object",
+    "required": [
+     "import",
+     "errors"
+    ],
+    "title": "ImportResultOut"
+   },
+   "ImportRowOut": {
+    "properties": {
+     "line": {
+      "type": "integer",
+      "title": "Line"
+     },
+     "date": {
+      "type": "string",
+      "format": "date",
+      "title": "Date"
+     },
+     "description": {
+      "type": "string",
+      "title": "Description"
+     },
+     "amount": {
+      "type": "string",
+      "title": "Amount"
+     },
+     "category_id": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "uuid"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Category Id"
+     }
+    },
+    "type": "object",
+    "required": [
+     "line",
+     "date",
+     "description",
+     "amount"
+    ],
+    "title": "ImportRowOut"
+   },
+   "LoanRepaymentIn": {
+    "properties": {
+     "country_code": {
+      "type": "string",
+      "pattern": "^[A-Z]{2}$",
+      "title": "Country Code"
+     },
+     "principal": {
+      "anyOf": [
+       {
+        "type": "number",
+        "minimum": 0.0
+       },
+       {
+        "type": "string"
+       }
+      ],
+      "title": "Principal"
+     },
+     "annual_rate_pct": {
+      "anyOf": [
+       {
+        "type": "number",
+        "maximum": 100.0,
+        "minimum": 0.0
+       },
+       {
+        "type": "string"
+       }
+      ],
+      "title": "Annual Rate Pct"
+     },
+     "years": {
+      "type": "integer",
+      "maximum": 60.0,
+      "minimum": 1.0,
+      "title": "Years"
+     },
+     "extra_monthly": {
+      "anyOf": [
+       {
+        "type": "number",
+        "minimum": 0.0
+       },
+       {
+        "type": "string"
+       }
+      ],
+      "title": "Extra Monthly",
+      "default": "0"
+     }
+    },
+    "type": "object",
+    "required": [
+     "country_code",
+     "principal",
+     "annual_rate_pct",
+     "years"
+    ],
+    "title": "LoanRepaymentIn"
+   },
+   "MeOut": {
+    "properties": {
+     "id": {
+      "type": "string",
+      "format": "uuid",
+      "title": "Id"
+     },
+     "email": {
+      "type": "string",
+      "title": "Email"
+     },
+     "display_name": {
+      "type": "string",
+      "title": "Display Name"
+     },
+     "home_currency": {
+      "type": "string",
+      "title": "Home Currency"
+     },
+     "active_country_code": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Active Country Code"
+     },
+     "countries": {
+      "items": {
+       "$ref": "#/components/schemas/CountryLinkOut"
+      },
+      "type": "array",
+      "title": "Countries"
+     }
+    },
+    "type": "object",
+    "required": [
+     "id",
+     "email",
+     "display_name",
+     "home_currency",
+     "active_country_code",
+     "countries"
+    ],
+    "title": "MeOut"
+   },
+   "MeUpdate": {
+    "properties": {
+     "display_name": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 100
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Display Name"
+     },
+     "home_currency": {
+      "anyOf": [
+       {
+        "type": "string",
+        "pattern": "^[A-Z]{3}$"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Home Currency"
+     },
+     "active_country_code": {
+      "anyOf": [
+       {
+        "type": "string",
+        "pattern": "^[A-Z]{2}$"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Active Country Code"
+     }
+    },
+    "type": "object",
+    "title": "MeUpdate"
+   },
+   "NetWorthAccount": {
+    "properties": {
+     "account_id": {
+      "type": "string",
+      "format": "uuid",
+      "title": "Account Id"
+     },
+     "name": {
+      "type": "string",
+      "title": "Name"
+     },
+     "country_code": {
+      "type": "string",
+      "title": "Country Code"
+     },
+     "currency": {
+      "type": "string",
+      "title": "Currency"
+     },
+     "balance": {
+      "type": "string",
+      "title": "Balance"
+     },
+     "converted": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Converted"
+     }
+    },
+    "type": "object",
+    "required": [
+     "account_id",
+     "name",
+     "country_code",
+     "currency",
+     "balance",
+     "converted"
+    ],
+    "title": "NetWorthAccount"
+   },
+   "NetWorthOut": {
+    "properties": {
+     "currency": {
+      "type": "string",
+      "title": "Currency"
+     },
+     "total": {
+      "type": "string",
+      "title": "Total"
+     },
+     "by_country": {
+      "additionalProperties": {
+       "type": "string"
+      },
+      "type": "object",
+      "title": "By Country"
+     },
+     "accounts": {
+      "items": {
+       "$ref": "#/components/schemas/NetWorthAccount"
+      },
+      "type": "array",
+      "title": "Accounts"
+     },
+     "missing_rates": {
+      "items": {
+       "type": "string"
+      },
+      "type": "array",
+      "title": "Missing Rates"
+     },
+     "rates_as_of": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "date"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Rates As Of"
+     }
+    },
+    "type": "object",
+    "required": [
+     "currency",
+     "total",
+     "by_country",
+     "accounts",
+     "missing_rates",
+     "rates_as_of"
+    ],
+    "title": "NetWorthOut"
+   },
+   "PackIn": {
+    "properties": {
+     "country_code": {
+      "type": "string",
+      "pattern": "^[A-Z]{2}$",
+      "title": "Country Code"
+     },
+     "content": {
+      "additionalProperties": true,
+      "type": "object",
+      "title": "Content"
+     }
+    },
+    "type": "object",
+    "required": [
+     "country_code",
+     "content"
+    ],
+    "title": "PackIn"
+   },
+   "PackOut": {
+    "properties": {
+     "id": {
+      "type": "string",
+      "format": "uuid",
+      "title": "Id"
+     },
+     "country_code": {
+      "type": "string",
+      "title": "Country Code"
+     },
+     "version": {
+      "type": "integer",
+      "title": "Version"
+     },
+     "status": {
+      "type": "string",
+      "title": "Status"
+     },
+     "content": {
+      "additionalProperties": true,
+      "type": "object",
+      "title": "Content"
+     },
+     "created_by": {
+      "type": "string",
+      "title": "Created By"
+     },
+     "activated_by": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Activated By"
+     }
+    },
+    "type": "object",
+    "required": [
+     "id",
+     "country_code",
+     "version",
+     "status",
+     "content",
+     "created_by",
+     "activated_by"
+    ],
+    "title": "PackOut"
+   },
+   "Page_TransactionOut_": {
+    "properties": {
+     "items": {
+      "items": {
+       "$ref": "#/components/schemas/TransactionOut"
+      },
+      "type": "array",
+      "title": "Items"
+     },
+     "total": {
+      "type": "integer",
+      "title": "Total"
+     },
+     "limit": {
+      "type": "integer",
+      "title": "Limit"
+     },
+     "offset": {
+      "type": "integer",
+      "title": "Offset"
+     }
+    },
+    "type": "object",
+    "required": [
+     "items",
+     "total",
+     "limit",
+     "offset"
+    ],
+    "title": "Page[TransactionOut]"
+   },
+   "RegularInvestingIn": {
+    "properties": {
+     "country_code": {
+      "type": "string",
+      "pattern": "^[A-Z]{2}$",
+      "title": "Country Code"
+     },
+     "monthly_amount": {
+      "anyOf": [
+       {
+        "type": "number",
+        "minimum": 0.0
+       },
+       {
+        "type": "string"
+       }
+      ],
+      "title": "Monthly Amount"
+     },
+     "annual_return_pct": {
+      "anyOf": [
+       {
+        "type": "number",
+        "maximum": 100.0,
+        "minimum": 0.0
+       },
+       {
+        "type": "string"
+       }
+      ],
+      "title": "Annual Return Pct"
+     },
+     "years": {
+      "type": "integer",
+      "maximum": 60.0,
+      "minimum": 1.0,
+      "title": "Years"
+     },
+     "annual_step_up_pct": {
+      "anyOf": [
+       {
+        "type": "number",
+        "maximum": 100.0,
+        "minimum": 0.0
+       },
+       {
+        "type": "string"
+       }
+      ],
+      "title": "Annual Step Up Pct",
+      "default": "0"
+     }
+    },
+    "type": "object",
+    "required": [
+     "country_code",
+     "monthly_amount",
+     "annual_return_pct",
+     "years"
+    ],
+    "title": "RegularInvestingIn"
+   },
+   "RemittanceIn": {
+    "properties": {
+     "date": {
+      "type": "string",
+      "format": "date",
+      "title": "Date"
+     },
+     "from_country_code": {
+      "type": "string",
+      "pattern": "^[A-Z]{2}$",
+      "title": "From Country Code"
+     },
+     "to_country_code": {
+      "type": "string",
+      "pattern": "^[A-Z]{2}$",
+      "title": "To Country Code"
+     },
+     "from_currency": {
+      "anyOf": [
+       {
+        "type": "string",
+        "pattern": "^[A-Z]{3}$"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "From Currency"
+     },
+     "to_currency": {
+      "anyOf": [
+       {
+        "type": "string",
+        "pattern": "^[A-Z]{3}$"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "To Currency"
+     },
+     "amount_sent": {
+      "anyOf": [
+       {
+        "type": "number",
+        "minimum": 0.0
+       },
+       {
+        "type": "string"
+       }
+      ],
+      "title": "Amount Sent",
+      "description": "Everything you paid, including the fee"
+     },
+     "fee": {
+      "anyOf": [
+       {
+        "type": "number",
+        "minimum": 0.0
+       },
+       {
+        "type": "string"
+       }
+      ],
+      "title": "Fee",
+      "default": "0"
+     },
+     "amount_received": {
+      "anyOf": [
+       {
+        "type": "number",
+        "minimum": 0.0
+       },
+       {
+        "type": "string"
+       }
+      ],
+      "title": "Amount Received"
+     },
+     "provider": {
+      "type": "string",
+      "maxLength": 100,
+      "title": "Provider",
+      "default": ""
+     },
+     "note": {
+      "type": "string",
+      "maxLength": 2000,
+      "title": "Note",
+      "default": ""
+     }
+    },
+    "type": "object",
+    "required": [
+     "date",
+     "from_country_code",
+     "to_country_code",
+     "amount_sent",
+     "amount_received"
+    ],
+    "title": "RemittanceIn"
+   },
+   "RemittanceOut": {
+    "properties": {
+     "id": {
+      "type": "string",
+      "format": "uuid",
+      "title": "Id"
+     },
+     "date": {
+      "type": "string",
+      "format": "date",
+      "title": "Date"
+     },
+     "from_country_code": {
+      "type": "string",
+      "title": "From Country Code"
+     },
+     "to_country_code": {
+      "type": "string",
+      "title": "To Country Code"
+     },
+     "from_currency": {
+      "type": "string",
+      "title": "From Currency"
+     },
+     "to_currency": {
+      "type": "string",
+      "title": "To Currency"
+     },
+     "amount_sent": {
+      "type": "string",
+      "title": "Amount Sent"
+     },
+     "fee": {
+      "type": "string",
+      "title": "Fee"
+     },
+     "amount_received": {
+      "type": "string",
+      "title": "Amount Received"
+     },
+     "provider": {
+      "type": "string",
+      "title": "Provider"
+     },
+     "note": {
+      "type": "string",
+      "title": "Note"
+     },
+     "effective_rate": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Effective Rate"
+     },
+     "market_rate": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Market Rate"
+     },
+     "total_cost": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Total Cost"
+     },
+     "rate_margin_cost": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Rate Margin Cost"
+     },
+     "cost_percent": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Cost Percent"
+     }
+    },
+    "type": "object",
+    "required": [
+     "id",
+     "date",
+     "from_country_code",
+     "to_country_code",
+     "from_currency",
+     "to_currency",
+     "amount_sent",
+     "fee",
+     "amount_received",
+     "provider",
+     "note"
+    ],
+    "title": "RemittanceOut"
+   },
+   "RemittanceSummaryOut": {
+    "properties": {
+     "currency": {
+      "type": "string",
+      "title": "Currency"
+     },
+     "transfers_counted": {
+      "type": "integer",
+      "title": "Transfers Counted"
+     },
+     "transfers_without_market_rate": {
+      "type": "integer",
+      "title": "Transfers Without Market Rate"
+     },
+     "sent": {
+      "type": "string",
+      "title": "Sent"
+     },
+     "fees": {
+      "type": "string",
+      "title": "Fees"
+     },
+     "rate_margin": {
+      "type": "string",
+      "title": "Rate Margin"
+     },
+     "total_cost": {
+      "type": "string",
+      "title": "Total Cost"
+     },
+     "cost_percent": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Cost Percent"
+     },
+     "cost_by_provider": {
+      "additionalProperties": {
+       "type": "string"
+      },
+      "type": "object",
+      "title": "Cost By Provider"
+     }
+    },
+    "type": "object",
+    "required": [
+     "currency",
+     "transfers_counted",
+     "transfers_without_market_rate",
+     "sent",
+     "fees",
+     "rate_margin",
+     "total_cost",
+     "cost_percent",
+     "cost_by_provider"
+    ],
+    "title": "RemittanceSummaryOut"
+   },
+   "RuleIn": {
+    "properties": {
+     "pattern": {
+      "type": "string",
+      "maxLength": 100,
+      "minLength": 2,
+      "title": "Pattern"
+     },
+     "category_id": {
+      "type": "string",
+      "format": "uuid",
+      "title": "Category Id"
+     },
+     "priority": {
+      "type": "integer",
+      "maximum": 1000.0,
+      "minimum": 0.0,
+      "title": "Priority",
+      "default": 100
+     }
+    },
+    "type": "object",
+    "required": [
+     "pattern",
+     "category_id"
+    ],
+    "title": "RuleIn"
+   },
+   "RuleOut": {
+    "properties": {
+     "id": {
+      "type": "string",
+      "format": "uuid",
+      "title": "Id"
+     },
+     "pattern": {
+      "type": "string",
+      "title": "Pattern"
+     },
+     "category_id": {
+      "type": "string",
+      "format": "uuid",
+      "title": "Category Id"
+     },
+     "priority": {
+      "type": "integer",
+      "title": "Priority"
+     }
+    },
+    "type": "object",
+    "required": [
+     "id",
+     "pattern",
+     "category_id",
+     "priority"
+    ],
+    "title": "RuleOut"
+   },
+   "SavedMappingOut": {
+    "properties": {
+     "id": {
+      "type": "string",
+      "format": "uuid",
+      "title": "Id"
+     },
+     "name": {
+      "type": "string",
+      "title": "Name"
+     },
+     "mapping": {
+      "$ref": "#/components/schemas/CsvMapping"
+     }
+    },
+    "type": "object",
+    "required": [
+     "id",
+     "name",
+     "mapping"
+    ],
+    "title": "SavedMappingOut"
+   },
+   "SpendingOut": {
+    "properties": {
+     "country_code": {
+      "type": "string",
+      "title": "Country Code"
+     },
+     "currency": {
+      "type": "string",
+      "title": "Currency"
+     },
+     "month": {
+      "type": "string",
+      "title": "Month"
+     },
+     "by_category": {
+      "items": {
+       "additionalProperties": true,
+       "type": "object"
+      },
+      "type": "array",
+      "title": "By Category"
+     },
+     "monthly": {
+      "items": {
+       "additionalProperties": true,
+       "type": "object"
+      },
+      "type": "array",
+      "title": "Monthly"
+     },
+     "income": {
+      "type": "string",
+      "title": "Income"
+     },
+     "spending": {
+      "type": "string",
+      "title": "Spending"
+     },
+     "missing_rates": {
+      "items": {
+       "type": "string"
+      },
+      "type": "array",
+      "title": "Missing Rates"
+     }
+    },
+    "type": "object",
+    "required": [
+     "country_code",
+     "currency",
+     "month",
+     "by_category",
+     "monthly",
+     "income",
+     "spending",
+     "missing_rates"
+    ],
+    "title": "SpendingOut"
+   },
+   "TransactionIn": {
+    "properties": {
+     "account_id": {
+      "type": "string",
+      "format": "uuid",
+      "title": "Account Id"
+     },
+     "date": {
+      "type": "string",
+      "format": "date",
+      "title": "Date"
+     },
+     "description": {
+      "type": "string",
+      "maxLength": 500,
+      "minLength": 1,
+      "title": "Description"
+     },
+     "amount": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "string"
+       }
+      ],
+      "title": "Amount"
+     },
+     "category_id": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "uuid"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Category Id"
+     },
+     "notes": {
+      "type": "string",
+      "maxLength": 2000,
+      "title": "Notes",
+      "default": ""
+     }
+    },
+    "type": "object",
+    "required": [
+     "account_id",
+     "date",
+     "description",
+     "amount"
+    ],
+    "title": "TransactionIn"
+   },
+   "TransactionOut": {
+    "properties": {
+     "id": {
+      "type": "string",
+      "format": "uuid",
+      "title": "Id"
+     },
+     "account_id": {
+      "type": "string",
+      "format": "uuid",
+      "title": "Account Id"
+     },
+     "date": {
+      "type": "string",
+      "format": "date",
+      "title": "Date"
+     },
+     "description": {
+      "type": "string",
+      "title": "Description"
+     },
+     "amount": {
+      "type": "string",
+      "title": "Amount"
+     },
+     "currency": {
+      "type": "string",
+      "title": "Currency",
+      "default": ""
+     },
+     "category_id": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "uuid"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Category Id"
+     },
+     "notes": {
+      "type": "string",
+      "title": "Notes"
+     },
+     "import_id": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "uuid"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Import Id"
+     }
+    },
+    "type": "object",
+    "required": [
+     "id",
+     "account_id",
+     "date",
+     "description",
+     "amount",
+     "category_id",
+     "notes",
+     "import_id"
+    ],
+    "title": "TransactionOut"
+   },
+   "TransactionUpdate": {
+    "properties": {
+     "date": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "date"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Date"
+     },
+     "description": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 500,
+        "minLength": 1
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Description"
+     },
+     "amount": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Amount"
+     },
+     "category_id": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "uuid"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Category Id"
+     },
+     "clear_category": {
+      "type": "boolean",
+      "title": "Clear Category",
+      "default": false
+     },
+     "notes": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 2000
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Notes"
+     }
+    },
+    "type": "object",
+    "title": "TransactionUpdate"
+   },
+   "ValidationError": {
+    "properties": {
+     "loc": {
+      "items": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "integer"
+        }
+       ]
+      },
+      "type": "array",
+      "title": "Location"
+     },
+     "msg": {
+      "type": "string",
+      "title": "Message"
+     },
+     "type": {
+      "type": "string",
+      "title": "Error Type"
+     },
+     "input": {
+      "title": "Input"
+     },
+     "ctx": {
+      "type": "object",
+      "title": "Context"
+     }
+    },
+    "type": "object",
+    "required": [
+     "loc",
+     "msg",
+     "type"
+    ],
+    "title": "ValidationError"
+   }
+  }
+ }
+}

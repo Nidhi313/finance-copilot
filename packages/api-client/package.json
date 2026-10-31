@@ -1,0 +1,17 @@
+{
+  "name": "@finance-copilot/api-client",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "scripts": {
+    "gen": "openapi-typescript openapi.json -o src/schema.d.ts --default-non-nullable false"
+  },
+  "dependencies": {
+    "openapi-fetch": "0.13.8"
+  },
+  "devDependencies": {
+    "openapi-typescript": "7.8.0"
+  }
+}
