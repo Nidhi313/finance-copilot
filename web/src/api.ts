@@ -1,7 +1,13 @@
 import { createApiClient, type Schemas } from "@finance-copilot/api-client";
+import { AUTH_MODE, getToken } from "./auth";
 
 export const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:8000";
-export const api = createApiClient(API_URL);
+export const api = createApiClient(API_URL, AUTH_MODE === "entra" ? getToken : undefined);
+
+async function authHeaders(): Promise<Record<string, string>> {
+  const token = AUTH_MODE === "entra" ? await getToken() : null;
+  return token ? { Authorization: `Bearer ${token}` } : {};
+}
 export type { Schemas };
 
 /** Turn FastAPI's error body into one readable sentence. */
@@ -31,8 +37,20 @@ export async function call<T>(p: Promise<{ data?: T; error?: unknown; response: 
 
 /** Multipart uploads (CSV import) go through fetch directly. */
 export async function postForm<T>(path: string, form: FormData): Promise<T> {
-  const res = await fetch(`${API_URL}${path}`, { method: "POST", body: form });
+  const res = await fetch(`${API_URL}${path}`, { method: "POST", body: form, headers: await authHeaders() });
   const body = await res.json().catch(() => ({}));
   if (!res.ok) throw new Error(errorMessage(body));
   return body as T;
+}
+
+/** Download a file from the API (with the sign-in token) and save it. */
+export async function downloadFile(path: string, filename: string): Promise<void> {
+  const res = await fetch(`${API_URL}${path}`, { headers: await authHeaders() });
+  if (!res.ok) throw new Error(errorMessage(await res.json().catch(() => res.statusText)));
+  const url = URL.createObjectURL(await res.blob());
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
 }

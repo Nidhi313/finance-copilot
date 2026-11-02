@@ -6,3 +6,4 @@ psycopg[binary]
 pydantic-settings
 python-multipart
 httpx
+pyjwt[crypto]

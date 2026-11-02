@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { api, call } from "../api";
+import { AUTH_MODE, signOut } from "../auth";
 import { AddCountry } from "../components/CountryPicker";
 import { Card, ErrorNote, Field } from "../components/ui";
 import { keys, useCountries } from "../hooks";
@@ -22,6 +23,11 @@ export default function Onboarding() {
           Start with the countries you live in, bank in or send money to. You can add more later, and any country works.
           Australia and India have extra local detail today.
         </p>
+        {AUTH_MODE === "entra" && (
+          <p className="small muted">
+            Not you? <button className="btn link" onClick={() => signOut()}>Sign out</button>
+          </p>
+        )}
       </div>
       <Card title="Your home currency" sub="Net worth and totals are shown in this currency. You can change it any time.">
         <div className="row">

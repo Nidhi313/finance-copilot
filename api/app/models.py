@@ -76,10 +76,13 @@ class CountryPack(Base):
 class User(Base):
     __tablename__ = "users"
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=_uuid)
-    email: Mapped[str] = mapped_column(String(255), unique=True)
+    # Entra object id of the person. Empty only for the local demo user.
+    auth_subject: Mapped[str | None] = mapped_column(String(100), unique=True)
+    email: Mapped[str | None] = mapped_column(String(255), unique=True)
     display_name: Mapped[str] = mapped_column(String(100), default="")
     home_currency: Mapped[str] = mapped_column(String(3), default="AUD")
     active_country_code: Mapped[str | None] = mapped_column(ForeignKey("countries.code"))
+    onboarding_dismissed: Mapped[bool] = mapped_column(Boolean, default=False, server_default=text("false"))
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
     countries: Mapped[list["UserCountryLink"]] = relationship(

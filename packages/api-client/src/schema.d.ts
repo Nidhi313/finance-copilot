@@ -63,6 +63,26 @@ export interface paths {
         patch: operations["update_me_v1_me_patch"];
         trace?: never;
     };
+    "/v1/me/getting-started": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Getting Started
+         * @description A new user's first steps, each ticked off from their own data.
+         */
+        get: operations["getting_started_v1_me_getting_started_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/me/countries/{code}": {
         parameters: {
             query?: never;
@@ -1118,6 +1138,27 @@ export interface components {
             /** Day */
             day: number;
         };
+        /** GettingStartedOut */
+        GettingStartedOut: {
+            /** Dismissed */
+            dismissed: boolean;
+            /** Steps */
+            steps: components["schemas"]["GettingStartedStep"][];
+            /** Done Count */
+            done_count: number;
+            /** Total */
+            total: number;
+        };
+        /** GettingStartedStep */
+        GettingStartedStep: {
+            /**
+             * Key
+             * @enum {string}
+             */
+            key: "countries" | "account" | "transactions" | "budget" | "transfer" | "goal";
+            /** Done */
+            done: boolean;
+        };
         /** GoalIn */
         GoalIn: {
             /** Name */
@@ -1255,13 +1296,15 @@ export interface components {
              */
             id: string;
             /** Email */
-            email: string;
+            email: string | null;
             /** Display Name */
             display_name: string;
             /** Home Currency */
             home_currency: string;
             /** Active Country Code */
             active_country_code: string | null;
+            /** Onboarding Dismissed */
+            onboarding_dismissed: boolean;
             /** Countries */
             countries: components["schemas"]["CountryLinkOut"][];
         };
@@ -1273,6 +1316,8 @@ export interface components {
             home_currency?: string | null;
             /** Active Country Code */
             active_country_code?: string | null;
+            /** Onboarding Dismissed */
+            onboarding_dismissed?: boolean | null;
         };
         /** NetWorthAccount */
         NetWorthAccount: {
@@ -1750,6 +1795,26 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    getting_started_v1_me_getting_started_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GettingStartedOut"];
                 };
             };
         };

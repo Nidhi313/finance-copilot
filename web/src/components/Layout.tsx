@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { NavLink, Outlet } from "react-router-dom";
 import { api, call } from "../api";
+import { AUTH_MODE, currentAccount, signOut } from "../auth";
 import { keys, useCountries, useMe } from "../hooks";
 
 const NAV = [
@@ -60,6 +61,12 @@ export function Layout() {
             ))}
           </div>
         ))}
+        {AUTH_MODE === "entra" && (
+          <div className="side-user">
+            <span>{me.data?.email ?? currentAccount()?.username}</span>
+            <button onClick={() => signOut()}>Sign out</button>
+          </div>
+        )}
       </nav>
       <div className="main">
         <header className="topbar">

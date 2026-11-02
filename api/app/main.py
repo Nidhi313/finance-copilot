@@ -20,6 +20,8 @@ from app.routers import (
     transactions,
 )
 
+settings.check()
+
 app = FastAPI(
     title="Finance Copilot API",
     version="0.1.0",

@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { api, call } from "../api";
+import { GettingStarted } from "../components/GettingStarted";
 import { Card, Empty, ErrorNote, PageHead, Progress } from "../components/ui";
 import { money, monthLabel, num } from "../format";
 import { useActiveCountry, useCountries, useMe } from "../hooks";
@@ -43,6 +44,7 @@ export default function Overview() {
   return (
     <>
       <PageHead title="Overview" sub={ctx ? `Spending and budgets are for ${ctx.name}. Net worth covers every country.` : undefined} />
+      <GettingStarted />
       <ErrorNote error={worth.error} />
 
       <Card

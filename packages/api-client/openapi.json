@@ -92,7 +92,12 @@
        }
       }
      }
-    }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ]
    },
    "delete": {
     "tags": [
@@ -105,7 +110,12 @@
      "204": {
       "description": "Successful Response"
      }
-    }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ]
    },
    "patch": {
     "tags": [
@@ -144,7 +154,39 @@
        }
       }
      }
-    }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ]
+   }
+  },
+  "/v1/me/getting-started": {
+   "get": {
+    "tags": [
+     "profile"
+    ],
+    "summary": "Getting Started",
+    "description": "A new user's first steps, each ticked off from their own data.",
+    "operationId": "getting_started_v1_me_getting_started_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/GettingStartedOut"
+        }
+       }
+      }
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ]
    }
   },
   "/v1/me/countries/{code}": {
@@ -155,6 +197,11 @@
     "summary": "Link Country",
     "description": "Add a country to your profile, or change your relationship to it. Any country works.",
     "operationId": "link_country_v1_me_countries__code__put",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
     "parameters": [
      {
       "name": "code",
@@ -205,6 +252,11 @@
     ],
     "summary": "Unlink Country",
     "operationId": "unlink_country_v1_me_countries__code__delete",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
     "parameters": [
      {
       "name": "code",
@@ -255,7 +307,12 @@
        "application/zip": {}
       }
      }
-    }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ]
    }
   },
   "/v1/accounts": {
@@ -265,6 +322,11 @@
     ],
     "summary": "List Accounts",
     "operationId": "list_accounts_v1_accounts_get",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
     "parameters": [
      {
       "name": "country",
@@ -326,6 +388,11 @@
     ],
     "summary": "Create Account",
     "operationId": "create_account_v1_accounts_post",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
     "requestBody": {
      "required": true,
      "content": {
@@ -367,6 +434,11 @@
     ],
     "summary": "Get Account",
     "operationId": "get_account_v1_accounts__account_id__get",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
     "parameters": [
      {
       "name": "account_id",
@@ -408,6 +480,11 @@
     ],
     "summary": "Update Account",
     "operationId": "update_account_v1_accounts__account_id__patch",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
     "parameters": [
      {
       "name": "account_id",
@@ -460,6 +537,11 @@
     "summary": "Delete Account",
     "description": "Deletes the account and all its transactions. Archive it instead to keep history.",
     "operationId": "delete_account_v1_accounts__account_id__delete",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
     "parameters": [
      {
       "name": "account_id",
@@ -511,7 +593,12 @@
        }
       }
      }
-    }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ]
    },
    "post": {
     "tags": [
@@ -550,7 +637,12 @@
        }
       }
      }
-    }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ]
    }
   },
   "/v1/categories/{category_id}": {
@@ -560,6 +652,11 @@
     ],
     "summary": "Delete Category",
     "operationId": "delete_category_v1_categories__category_id__delete",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
     "parameters": [
      {
       "name": "category_id",
@@ -611,7 +708,12 @@
        }
       }
      }
-    }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ]
    },
    "post": {
     "tags": [
@@ -650,7 +752,12 @@
        }
       }
      }
-    }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ]
    }
   },
   "/v1/category-rules/{rule_id}": {
@@ -660,6 +767,11 @@
     ],
     "summary": "Delete Rule",
     "operationId": "delete_rule_v1_category_rules__rule_id__delete",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
     "parameters": [
      {
       "name": "rule_id",
@@ -708,7 +820,12 @@
        }
       }
      }
-    }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ]
    }
   },
   "/v1/transactions": {
@@ -718,6 +835,11 @@
     ],
     "summary": "List Transactions",
     "operationId": "list_transactions_v1_transactions_get",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
     "parameters": [
      {
       "name": "account_id",
@@ -883,6 +1005,11 @@
     ],
     "summary": "Create Transaction",
     "operationId": "create_transaction_v1_transactions_post",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
     "requestBody": {
      "required": true,
      "content": {
@@ -924,6 +1051,11 @@
     ],
     "summary": "Update Transaction",
     "operationId": "update_transaction_v1_transactions__txn_id__patch",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
     "parameters": [
      {
       "name": "txn_id",
@@ -975,6 +1107,11 @@
     ],
     "summary": "Delete Transaction",
     "operationId": "delete_transaction_v1_transactions__txn_id__delete",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
     "parameters": [
      {
       "name": "txn_id",
@@ -1043,7 +1180,12 @@
        }
       }
      }
-    }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ]
    }
   },
   "/v1/imports": {
@@ -1068,7 +1210,12 @@
        }
       }
      }
-    }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ]
    },
    "post": {
     "tags": [
@@ -1108,7 +1255,12 @@
        }
       }
      }
-    }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ]
    }
   },
   "/v1/csv-mappings": {
@@ -1133,7 +1285,12 @@
        }
       }
      }
-    }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ]
    }
   },
   "/v1/csv-mappings/{mapping_id}": {
@@ -1143,6 +1300,11 @@
     ],
     "summary": "Delete Saved Mapping",
     "operationId": "delete_saved_mapping_v1_csv_mappings__mapping_id__delete",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
     "parameters": [
      {
       "name": "mapping_id",
@@ -1179,6 +1341,11 @@
     ],
     "summary": "List Budgets",
     "operationId": "list_budgets_v1_budgets_get",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
     "parameters": [
      {
       "name": "country",
@@ -1231,6 +1398,11 @@
     "summary": "Upsert Budget",
     "description": "Create or change the monthly budget for one category in one country.",
     "operationId": "upsert_budget_v1_budgets_put",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
     "requestBody": {
      "required": true,
      "content": {
@@ -1272,6 +1444,11 @@
     ],
     "summary": "Delete Budget",
     "operationId": "delete_budget_v1_budgets__budget_id__delete",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
     "parameters": [
      {
       "name": "budget_id",
@@ -1309,6 +1486,11 @@
     "summary": "Budget Status",
     "description": "Spent vs remaining for each budget in a country, for one month (default: this month).",
     "operationId": "budget_status_v1_budgets_status_get",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
     "parameters": [
      {
       "name": "country",
@@ -1373,6 +1555,11 @@
     "summary": "Net Worth",
     "description": "Everything you hold across all your countries, in one currency (default: your home currency).\nAccounts whose currency has no exchange rate yet are listed but left out of the total.",
     "operationId": "net_worth_v1_reports_net_worth_get",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
     "parameters": [
      {
       "name": "currency",
@@ -1424,6 +1611,11 @@
     "summary": "Spending",
     "description": "Spending by category for one month, and income vs spending for the months before it.",
     "operationId": "spending_v1_reports_spending_get",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
     "parameters": [
      {
       "name": "country",
@@ -1527,7 +1719,12 @@
        }
       }
      }
-    }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ]
    },
    "post": {
     "tags": [
@@ -1566,7 +1763,12 @@
        }
       }
      }
-    }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ]
    }
   },
   "/v1/remittances/{remittance_id}": {
@@ -1576,6 +1778,11 @@
     ],
     "summary": "Delete Remittance",
     "operationId": "delete_remittance_v1_remittances__remittance_id__delete",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
     "parameters": [
      {
       "name": "remittance_id",
@@ -1613,6 +1820,11 @@
     "summary": "Remittance Summary",
     "description": "Totals across all transfers, in one currency (default: your home currency).",
     "operationId": "remittance_summary_v1_remittances_summary_get",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
     "parameters": [
      {
       "name": "currency",
@@ -1678,7 +1890,12 @@
        }
       }
      }
-    }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ]
    },
    "post": {
     "tags": [
@@ -1717,7 +1934,12 @@
        }
       }
      }
-    }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ]
    }
   },
   "/v1/goals/{goal_id}": {
@@ -1727,6 +1949,11 @@
     ],
     "summary": "Update Goal",
     "operationId": "update_goal_v1_goals__goal_id__put",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
     "parameters": [
      {
       "name": "goal_id",
@@ -1778,6 +2005,11 @@
     ],
     "summary": "Delete Goal",
     "operationId": "delete_goal_v1_goals__goal_id__delete",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
     "parameters": [
      {
       "name": "goal_id",
@@ -1845,7 +2077,12 @@
        }
       }
      }
-    }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ]
    }
   },
   "/v1/calculators/regular-investing": {
@@ -1886,7 +2123,12 @@
        }
       }
      }
-    }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ]
    }
   },
   "/v1/calculators/loan-repayment": {
@@ -1927,7 +2169,12 @@
        }
       }
      }
-    }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ]
    }
   },
   "/v1/calculators/emergency-fund": {
@@ -1969,7 +2216,12 @@
        }
       }
      }
-    }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ]
    }
   },
   "/v1/fx/rate": {
@@ -2049,6 +2301,11 @@
     ],
     "summary": "List Packs",
     "operationId": "list_packs_v1_admin_country_packs_get",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
     "parameters": [
      {
       "name": "country",
@@ -2101,6 +2358,11 @@
     "summary": "Create Pack Draft",
     "description": "Create a new draft version of a country's pack. It does nothing until activated.",
     "operationId": "create_pack_draft_v1_admin_country_packs_post",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
     "requestBody": {
      "required": true,
      "content": {
@@ -2143,6 +2405,11 @@
     "summary": "Activate",
     "description": "Make this version live for its country. The previous active version is retired, not deleted.",
     "operationId": "activate_v1_admin_country_packs__pack_id__activate_post",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
     "parameters": [
      {
       "name": "pack_id",
@@ -2187,6 +2454,11 @@
     "summary": "Fx Refresh",
     "description": "Trigger the exchange-rate job by hand. Normally it runs on a schedule.",
     "operationId": "fx_refresh_v1_admin_fx_refresh_post",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
     "parameters": [
      {
       "name": "days",
@@ -3299,6 +3571,63 @@
     ],
     "title": "FyStart"
    },
+   "GettingStartedOut": {
+    "properties": {
+     "dismissed": {
+      "type": "boolean",
+      "title": "Dismissed"
+     },
+     "steps": {
+      "items": {
+       "$ref": "#/components/schemas/GettingStartedStep"
+      },
+      "type": "array",
+      "title": "Steps"
+     },
+     "done_count": {
+      "type": "integer",
+      "title": "Done Count"
+     },
+     "total": {
+      "type": "integer",
+      "title": "Total"
+     }
+    },
+    "type": "object",
+    "required": [
+     "dismissed",
+     "steps",
+     "done_count",
+     "total"
+    ],
+    "title": "GettingStartedOut"
+   },
+   "GettingStartedStep": {
+    "properties": {
+     "key": {
+      "type": "string",
+      "enum": [
+       "countries",
+       "account",
+       "transactions",
+       "budget",
+       "transfer",
+       "goal"
+      ],
+      "title": "Key"
+     },
+     "done": {
+      "type": "boolean",
+      "title": "Done"
+     }
+    },
+    "type": "object",
+    "required": [
+     "key",
+     "done"
+    ],
+    "title": "GettingStartedStep"
+   },
    "GoalIn": {
     "properties": {
      "name": {
@@ -3707,7 +4036,14 @@
       "title": "Id"
      },
      "email": {
-      "type": "string",
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
       "title": "Email"
      },
      "display_name": {
@@ -3729,6 +4065,10 @@
       ],
       "title": "Active Country Code"
      },
+     "onboarding_dismissed": {
+      "type": "boolean",
+      "title": "Onboarding Dismissed"
+     },
      "countries": {
       "items": {
        "$ref": "#/components/schemas/CountryLinkOut"
@@ -3744,6 +4084,7 @@
      "display_name",
      "home_currency",
      "active_country_code",
+     "onboarding_dismissed",
      "countries"
     ],
     "title": "MeOut"
@@ -3785,6 +4126,17 @@
        }
       ],
       "title": "Active Country Code"
+     },
+     "onboarding_dismissed": {
+      "anyOf": [
+       {
+        "type": "boolean"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Onboarding Dismissed"
      }
     },
     "type": "object",
@@ -4723,6 +5075,12 @@
      "type"
     ],
     "title": "ValidationError"
+   }
+  },
+  "securitySchemes": {
+   "HTTPBearer": {
+    "type": "http",
+    "scheme": "bearer"
    }
   }
  }

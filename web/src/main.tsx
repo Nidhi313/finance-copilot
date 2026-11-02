@@ -2,6 +2,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { API_URL } from "./api";
+import { AUTH_MODE, configProblem, currentAccount, initAuth } from "./auth";
 import { Layout } from "./components/Layout";
 import { ErrorNote } from "./components/ui";
 import { useMe } from "./hooks";
@@ -12,6 +14,7 @@ import Onboarding from "./pages/Onboarding";
 import Overview from "./pages/Overview";
 import Plan from "./pages/Plan";
 import Settings from "./pages/Settings";
+import SignIn from "./pages/SignIn";
 import Transactions from "./pages/Transactions";
 import Transfers from "./pages/Transfers";
 import "./styles.css";
@@ -24,7 +27,7 @@ function App() {
   if (me.error)
     return (
       <div className="content">
-        <ErrorNote error={new Error(`Cannot reach the API. Is it running? (${me.error.message})`)} />
+        <ErrorNote error={new Error(`The API did not respond as expected: ${me.error.message}. Is it running on ${API_URL}?`)} />
       </div>
     );
   if (!me.data?.countries.length) return <Onboarding />;
@@ -44,12 +47,25 @@ function App() {
   );
 }
 
-createRoot(document.getElementById("root")!).render(
-  <StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </QueryClientProvider>
-  </StrictMode>,
-);
+const root = createRoot(document.getElementById("root")!);
+
+async function start() {
+  const problem = configProblem();
+  if (!problem) await initAuth();
+  const signedIn = AUTH_MODE === "dev" || !!currentAccount();
+  root.render(
+    <StrictMode>
+      {problem || !signedIn ? (
+        <SignIn problem={problem} />
+      ) : (
+        <QueryClientProvider client={queryClient}>
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
+        </QueryClientProvider>
+      )}
+    </StrictMode>,
+  );
+}
+
+start().catch((e) => root.render(<div className="content"><ErrorNote error={e} /></div>));

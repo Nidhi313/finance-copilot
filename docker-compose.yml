@@ -22,6 +22,9 @@ services:
     build:
       context: .
       dockerfile: api/Dockerfile
+    env_file:
+      - path: api/.env      # optional: sign-in settings (AUTH_MODE, ENTRA_*); see api/.env.example
+        required: false
     environment:
       DATABASE_URL: postgresql+psycopg://finance:finance@db:5432/finance
       ENVIRONMENT: local

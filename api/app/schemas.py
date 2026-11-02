@@ -62,10 +62,11 @@ class CountryLinkOut(ORM):
 
 class MeOut(ORM):
     id: uuid.UUID
-    email: str
+    email: str | None
     display_name: str
     home_currency: str
     active_country_code: str | None
+    onboarding_dismissed: bool
     countries: list[CountryLinkOut]
 
 
@@ -73,6 +74,19 @@ class MeUpdate(BaseModel):
     display_name: str | None = Field(default=None, max_length=100)
     home_currency: CurrencyCode | None = None
     active_country_code: CountryCode | None = None
+    onboarding_dismissed: bool | None = None
+
+
+class GettingStartedStep(BaseModel):
+    key: Literal["countries", "account", "transactions", "budget", "transfer", "goal"]
+    done: bool
+
+
+class GettingStartedOut(BaseModel):
+    dismissed: bool
+    steps: list[GettingStartedStep]
+    done_count: int
+    total: int
 
 
 class CountryLinkIn(BaseModel):

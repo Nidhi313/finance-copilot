@@ -8,8 +8,8 @@ basic support, and new countries are added as data, not code.
 The app shows people their own data, simulates decisions and explains how money
 works. It never recommends a product, stock, fund or trade.
 
-**Status:** Release 1 (Track and Plan) running locally. Azure deployment, real
-sign-in and the remaining releases are next. See the project context doc for the plan.
+**Status:** Release 1 (Track and Plan) running locally, with sign-in through
+Microsoft Entra External ID. Azure deployment and the remaining releases are next.
 
 ## What's here
 
@@ -25,6 +25,8 @@ sign-in and the remaining releases are next. See the project context doc for the
 | Savings goals, linked to an account or tracked by hand | Goals |
 | Calculators: regular investing (SIP / dollar-cost averaging), compound growth, loan (EMI), emergency fund | Calculators |
 | Export all your data, delete your account | Settings |
+| Sign-in (Entra External ID); each person sees only their own data | Sign-in page |
+| Getting-started checklist that ticks off from your own data | Overview |
 
 ## Stack
 
@@ -52,7 +54,16 @@ npm run dev
 #    http://localhost:5173
 ```
 
-Sample statements to try the import with are in `samples/`. A full walkthrough, including what each phase built, is in [docs/BUILD_GUIDE.md](docs/BUILD_GUIDE.md).
+Sample statements to try the import with are in `samples/`.
+
+### Sign-in
+
+By default the app runs without sign-in as one local demo user (`AUTH_MODE=dev`).
+To sign in for real with Microsoft Entra External ID, copy `api/.env.example` to
+`api/.env` and `web/.env.example` to `web/.env.local`, fill in the tenant values,
+set both modes to `entra`, and restart `docker compose up` and `npm run dev`.
+The API checks every token's signature, issuer, audience, expiry and scope, and
+creates each person's account on first sign-in. Setup steps are in the build guide. A full walkthrough, including what each phase built, is in [docs/BUILD_GUIDE.md](docs/BUILD_GUIDE.md).
 
 ### Tests
 
@@ -117,9 +128,6 @@ Rules the code keeps:
 
 ## Not done yet
 
-- **Sign-in.** Locally every request runs as one demo user. The API refuses that
-  mode outside local and test environments. Entra External ID comes with the Azure
-  deployment.
 - **Azure deployment** (Container Apps, Postgres, Key Vault, Service Bus, Bicep,
   deploy pipeline).
 - **CSV imports run inside the request** (5 MB limit). They move to a queue on Azure.

@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { api, API_URL, call } from "../api";
+import { api, call, downloadFile } from "../api";
+import { AUTH_MODE, signOut } from "../auth";
 import { AddCountry } from "../components/CountryPicker";
 import { Card, ErrorNote, Field, PageHead } from "../components/ui";
 import { RELATIONSHIP_LABELS } from "../format";
@@ -61,8 +62,9 @@ export default function Settings() {
   });
   const deleteMe = useMutation({
     mutationFn: () => call(api.DELETE("/v1/me")),
-    onSuccess: () => qc.invalidateQueries(),
+    onSuccess: () => (AUTH_MODE === "entra" ? signOut() : qc.invalidateQueries()),
   });
+  const exportData = useMutation({ mutationFn: () => downloadFile("/v1/me/export", "my-finance-data.zip") });
   const [confirm, setConfirm] = useState("");
 
   return (
@@ -100,13 +102,18 @@ export default function Settings() {
         <div className="stack">
           <p>Download everything stored about you as CSV files, or delete your account and all its data for good.</p>
           <div className="row">
-            <a className="btn secondary" href={`${API_URL}/v1/me/export`}>Download my data</a>
+            <button className="btn secondary" onClick={() => exportData.mutate()} disabled={exportData.isPending}>
+              {exportData.isPending ? "Preparing…" : "Download my data"}
+            </button>
           </div>
           <div className="row">
             <input className="input" value={confirm} onChange={(e) => setConfirm(e.target.value)} placeholder='Type "delete" to confirm' aria-label="Confirm delete" />
             <button className="btn danger" disabled={confirm !== "delete" || deleteMe.isPending} onClick={() => deleteMe.mutate()}>Delete my account</button>
           </div>
-          <ErrorNote error={deleteMe.error} />
+          {AUTH_MODE === "entra" && (
+            <p className="small muted">Deleting removes everything in this app. Your sign-in account itself stays with Microsoft and you can sign up again.</p>
+          )}
+          <ErrorNote error={deleteMe.error ?? exportData.error} />
         </div>
       </Card>
     </>

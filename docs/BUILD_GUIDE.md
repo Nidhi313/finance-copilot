@@ -164,9 +164,56 @@ cost model that separates the visible fee from the rate margin."
 
 ---
 
-## 6. Known gaps (planned)
+## 6. Turn on sign-in (Microsoft Entra External ID)
 
-- Sign-in is a local demo user. The API refuses that mode outside local and test.
+Do the Azure portal setup first (external tenant, the `finance-copilot-api` and
+`finance-copilot-web` app registrations, the `SignUpSignIn` user flow). Then:
+
+```bash
+cp api/.env.example api/.env
+cp web/.env.example web/.env.local
+```
+
+In `api/.env`:
+```
+AUTH_MODE=entra
+ENTRA_TENANT_SUBDOMAIN=<your subdomain, without .onmicrosoft.com>
+ENTRA_TENANT_ID=<Directory (tenant) ID>
+ENTRA_API_CLIENT_ID=<finance-copilot-api Application (client) ID>
+ADMIN_EMAILS=["<the email you sign up with>"]
+```
+
+In `web/.env.local`:
+```
+VITE_AUTH_MODE=entra
+VITE_ENTRA_TENANT_SUBDOMAIN=<same subdomain>
+VITE_ENTRA_WEB_CLIENT_ID=<finance-copilot-web Application (client) ID>
+VITE_ENTRA_API_SCOPE=api://<finance-copilot-api Application (client) ID>/access_as_user
+```
+
+Restart both: `Ctrl+C` then `docker compose up` (Terminal 1) and `npm run dev`
+(Terminal 2). Open http://localhost:5173, choose "Sign in or create an account",
+then "Sign up". A new account starts at onboarding and then the getting-started
+checklist. Sign out, sign up as a second person, and check that neither sees the
+other's data.
+
+Neither file is committed (`.gitignore` covers them). The demo data command only
+fills the local demo user, so it is not visible once sign-in is on.
+
+### What this phase taught (interview notes)
+- The browser gets an access token from Entra; the API never sees a password.
+- The API validates the token itself: signature against the tenant's published
+  keys, issuer, audience (the API's client id), expiry, and the `access_as_user` scope.
+- People are identified by their Entra object id (`oid`), not email, because
+  emails can change.
+- Every query was already scoped to the user, so adding sign-in did not touch a
+  single feature endpoint.
+- Tests sign tokens with a locally generated key, so they need no Azure tenant.
+
+---
+
+## 7. Known gaps (planned)
+
 - No Azure yet: Bicep, Container Apps, Postgres, Key Vault, Service Bus, deploy pipeline.
 - CSV import runs in the request (5 MB cap); it moves to a queue on Azure.
 - Bank presets are marked unverified until tested against real exports.
@@ -174,7 +221,7 @@ cost model that separates the visible fee from the rate margin."
 
 ---
 
-## 7. Troubleshooting
+## 8. Troubleshooting
 
 | Problem | Fix |
 |---|---|
@@ -183,3 +230,7 @@ cost model that separates the visible fee from the rate margin."
 | `FX refresh failed` at startup | No internet or the provider is down; the app runs, net worth shows "not included yet". Retry with `docker compose exec api python -m app.cli fx-refresh 400` |
 | API code changes don't reload | Restart with `docker compose restart api` |
 | Tests can't connect | `docker compose up -d db` first |
+| Sign-in page says web/.env.local is missing values | Fill in all four `VITE_` values and restart `npm run dev` |
+| After signing in: "Invalid token: Audience doesn't match" | `ENTRA_API_CLIENT_ID` must be the **api** app's client id, and `requestedAccessTokenVersion` must be 2 in its manifest |
+| After signing in: "token is missing the access_as_user scope" | `VITE_ENTRA_API_SCOPE` must end in `/access_as_user`, and admin consent must be granted on the web app's API permissions |
+| Sign-in page loops back to itself | The redirect URI on `finance-copilot-web` must be exactly `http://localhost:5173` (type: Single-page application) |
