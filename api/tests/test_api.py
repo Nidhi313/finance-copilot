@@ -394,3 +394,11 @@ def test_demo_data_for_a_signed_in_user_then_clear(client, db):
 
     with pytest.raises(DemoError, match="Sign in to the app once first"):
         load_demo_data(db, "nobody@example.com")
+
+
+def test_telemetry_is_off_without_a_connection_string(monkeypatch):
+    from app.config import settings
+    from app.telemetry import setup_telemetry
+
+    monkeypatch.setattr(settings, "applicationinsights_connection_string", "")
+    assert setup_telemetry() is False

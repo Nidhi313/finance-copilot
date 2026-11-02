@@ -1,0 +1,153 @@
+name: Deploy one environment
+
+# Called by deploy.yml. The GitHub environment (staging or production) decides
+# whether a person must approve first, and is what Azure trusts for sign-in (OIDC):
+# no Azure passwords or keys are stored in GitHub.
+on:
+  workflow_call:
+    inputs:
+      environment:
+        type: string
+        required: true
+      image:
+        type: string
+        required: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ inputs.environment }}
+      url: ${{ steps.outputs.outputs.web_url }}
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      RG: ${{ vars.AZURE_RESOURCE_GROUP }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Sign in to Azure (OIDC)
+        uses: azure/login@v2
+        with:
+          client-id: ${{ vars.AZURE_CLIENT_ID }}
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Check settings
+        env:
+          AZURE_RESOURCE_GROUP: ${{ vars.AZURE_RESOURCE_GROUP }}
+          ENTRA_TENANT_SUBDOMAIN: ${{ vars.ENTRA_TENANT_SUBDOMAIN }}
+          ENTRA_TENANT_ID: ${{ vars.ENTRA_TENANT_ID }}
+          ENTRA_API_CLIENT_ID: ${{ vars.ENTRA_API_CLIENT_ID }}
+          ENTRA_WEB_CLIENT_ID: ${{ vars.ENTRA_WEB_CLIENT_ID }}
+          POSTGRES_ADMIN_PASSWORD: ${{ secrets.POSTGRES_ADMIN_PASSWORD }}
+        run: |
+          missing=""
+          for v in AZURE_RESOURCE_GROUP ENTRA_TENANT_SUBDOMAIN ENTRA_TENANT_ID ENTRA_API_CLIENT_ID ENTRA_WEB_CLIENT_ID POSTGRES_ADMIN_PASSWORD; do
+            [ -n "${!v}" ] || missing="$missing $v"
+          done
+          if [ -n "$missing" ]; then echo "::error::Missing GitHub settings:$missing (see docs/DEPLOY.md)"; exit 1; fi
+          az config set extension.use_dynamic_install=yes_without_prompt --only-show-errors
+          az extension add --name containerapp --upgrade --only-show-errors
+
+      - name: Shared infrastructure (Bicep)
+        if: inputs.environment == 'staging'
+        env:
+          PG: ${{ secrets.POSTGRES_ADMIN_PASSWORD }}
+        run: |
+          jq -n --arg pg "$PG" '{"$schema":"https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",contentVersion:"1.0.0.0",parameters:{postgresAdminPassword:{value:$pg}}}' > shared.params.json
+          az deployment group create -g "$RG" -n "shared-${{ github.run_id }}" -f infra/shared.bicep -p @shared.params.json -o none
+          rm shared.params.json
+
+      - name: Environment infrastructure and new API image (Bicep)
+        env:
+          PG: ${{ secrets.POSTGRES_ADMIN_PASSWORD }}
+          ADMIN_EMAILS: ${{ vars.ADMIN_EMAILS || '[]' }}
+        run: |
+          jq -n \
+            --arg env "${{ inputs.environment }}" --arg image "${{ inputs.image }}" --arg pg "$PG" \
+            --arg sub "${{ vars.ENTRA_TENANT_SUBDOMAIN }}" --arg tid "${{ vars.ENTRA_TENANT_ID }}" \
+            --arg api "${{ vars.ENTRA_API_CLIENT_ID }}" --arg admins "$ADMIN_EMAILS" \
+            '{"$schema":"https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",contentVersion:"1.0.0.0",parameters:{
+              environmentName:{value:$env}, apiImage:{value:$image}, postgresAdminPassword:{value:$pg},
+              entraTenantSubdomain:{value:$sub}, entraTenantId:{value:$tid}, entraApiClientId:{value:$api},
+              adminEmails:{value:$admins}}}' > app.params.json
+          az deployment group create -g "$RG" -n "app-${{ inputs.environment }}-${{ github.run_id }}" \
+            -f infra/app.bicep -p @app.params.json --query properties.outputs -o json > outputs.json
+          rm app.params.json
+
+      - id: outputs
+        name: Read deployment outputs
+        run: |
+          echo "api_url=$(jq -r .apiUrl.value outputs.json)" >> "$GITHUB_OUTPUT"
+          echo "web_url=$(jq -r .webUrl.value outputs.json)" >> "$GITHUB_OUTPUT"
+          echo "web_name=$(jq -r .webName.value outputs.json)" >> "$GITHUB_OUTPUT"
+          echo "migrate_job=$(jq -r .migrateJobName.value outputs.json)" >> "$GITHUB_OUTPUT"
+
+      - name: Run database migrations
+        run: |
+          job="${{ steps.outputs.outputs.migrate_job }}"
+          run_name=$(az containerapp job start -n "$job" -g "$RG" --query name -o tsv)
+          echo "Started $run_name"
+          for i in $(seq 1 90); do
+            status=$(az containerapp job execution show -n "$job" -g "$RG" --job-execution-name "$run_name" --query properties.status -o tsv)
+            echo "  $status"
+            case "$status" in
+              Succeeded) exit 0 ;;
+              Failed|Stopped|Degraded) echo "::error::Migration job $status. Logs: Container Apps > $job > Execution history"; exit 1 ;;
+            esac
+            sleep 10
+          done
+          echo "::error::Migration job did not finish in 15 minutes"; exit 1
+
+      - name: Smoke test the API
+        run: |
+          url="${{ steps.outputs.outputs.api_url }}"
+          for i in $(seq 1 30); do
+            if curl -fsS "$url/ready"; then echo; curl -fsS "$url/health"; echo; exit 0; fi
+            echo "  not ready yet ($i)"; sleep 10
+          done
+          echo "::error::$url/ready never answered"; exit 1
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Build the web app
+        env:
+          VITE_API_URL: ${{ steps.outputs.outputs.api_url }}
+          VITE_AUTH_MODE: entra
+          VITE_ENTRA_TENANT_SUBDOMAIN: ${{ vars.ENTRA_TENANT_SUBDOMAIN }}
+          VITE_ENTRA_TENANT_ID: ${{ vars.ENTRA_TENANT_ID }}
+          VITE_ENTRA_WEB_CLIENT_ID: ${{ vars.ENTRA_WEB_CLIENT_ID }}
+          VITE_ENTRA_API_SCOPE: api://${{ vars.ENTRA_API_CLIENT_ID }}/access_as_user
+        run: |
+          npm ci
+          npm run build
+
+      - id: swa
+        name: Get the Static Web App deploy token
+        run: |
+          token=$(az staticwebapp secrets list -n "${{ steps.outputs.outputs.web_name }}" -g "$RG" --query properties.apiKey -o tsv)
+          echo "::add-mask::$token"
+          echo "token=$token" >> "$GITHUB_OUTPUT"
+
+      - name: Deploy the web app
+        uses: Azure/static-web-apps-deploy@v1
+        with:
+          azure_static_web_apps_api_token: ${{ steps.swa.outputs.token }}
+          action: upload
+          app_location: web/dist
+          skip_app_build: true
+          skip_api_build: true
+
+      - name: Summary
+        run: |
+          {
+            echo "### ${{ inputs.environment }} deployed"
+            echo "- Web: ${{ steps.outputs.outputs.web_url }}"
+            echo "- API: ${{ steps.outputs.outputs.api_url }}  ([docs](${{ steps.outputs.outputs.api_url }}/docs))"
+            echo "- Image: \`${{ inputs.image }}\`"
+          } >> "$GITHUB_STEP_SUMMARY"

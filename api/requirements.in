@@ -7,3 +7,4 @@ pydantic-settings
 python-multipart
 httpx
 pyjwt[crypto]
+azure-monitor-opentelemetry

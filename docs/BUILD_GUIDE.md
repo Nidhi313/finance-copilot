@@ -221,7 +221,7 @@ docker compose exec api python -m app.cli clear-data you@example.com   # back to
 
 ## 7. Known gaps (planned)
 
-- No Azure yet: Bicep, Container Apps, Postgres, Key Vault, Service Bus, deploy pipeline.
+- Azure deployment is set up in docs/DEPLOY.md; private networking and Service Bus come next.
 - CSV import runs in the request (5 MB cap); it moves to a queue on Azure.
 - Bank presets are marked unverified until tested against real exports.
 - Retirement explainers wait for figures checked against official sources.

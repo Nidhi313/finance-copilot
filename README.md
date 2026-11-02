@@ -8,8 +8,9 @@ basic support, and new countries are added as data, not code.
 The app shows people their own data, simulates decisions and explains how money
 works. It never recommends a product, stock, fund or trade.
 
-**Status:** Release 1 (Track and Plan) running locally, with sign-in through
-Microsoft Entra External ID. Azure deployment and the remaining releases are next.
+**Status:** Release 1 (Track and Plan) with sign-in through Microsoft Entra External
+ID, deployed to Azure by GitHub Actions: staging on every merge, production after
+approval. See [docs/DEPLOY.md](docs/DEPLOY.md).
 
 ## What's here
 
@@ -33,7 +34,9 @@ Microsoft Entra External ID. Azure deployment and the remaining releases are nex
 FastAPI, SQLAlchemy, Alembic, PostgreSQL · React with Vite and TypeScript · typed API
 client generated from the OpenAPI spec (`packages/api-client`, shared with a future
 mobile app) · Docker Compose locally · GitHub Actions CI (lint, tests against real
-Postgres, migration check, Docker build and boot, web typecheck/test/build).
+Postgres, migration check, Docker build and boot, web typecheck/test/build) ·
+Azure Container Apps, Static Web Apps, PostgreSQL Flexible Server, Key Vault and
+Application Insights, all defined in Bicep and deployed with OIDC (no stored keys).
 Exchange rates from [Frankfurter](https://frankfurter.dev), stored against USD.
 
 ## Run it locally
@@ -115,6 +118,7 @@ api/                 FastAPI backend
   app/routers/       REST endpoints under /v1
   alembic/           migrations
   tests/             pytest against real Postgres
+infra/               Bicep (shared.bicep, app.bicep) and the one-time bootstrap script
 country-packs/       all countries + seed packs for AU and India (see its README)
 packages/api-client/ typed TypeScript client generated from OpenAPI
 web/                 React app
@@ -130,8 +134,8 @@ Rules the code keeps:
 
 ## Not done yet
 
-- **Azure deployment** (Container Apps, Postgres, Key Vault, Service Bus, Bicep,
-  deploy pipeline).
+- **Private networking** for the database before real personal data goes in
+  (see docs/DEPLOY.md).
 - **CSV imports run inside the request** (5 MB limit). They move to a queue on Azure.
 - **Bank presets are unverified** until tested against real exports.
 - **Retirement explainers**, waiting on figures checked against official sources.

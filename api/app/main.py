@@ -19,8 +19,10 @@ from app.routers import (
     reports,
     transactions,
 )
+from app.telemetry import setup_telemetry
 
 settings.check()
+setup_telemetry()  # must run before the FastAPI app is created so requests are traced
 
 app = FastAPI(
     title="Finance Copilot API",
