@@ -28,8 +28,12 @@ jobs:
       image: ${{ steps.name.outputs.image }}
     steps:
       - uses: actions/checkout@v4
+      # Image names must be lower case; the GitHub username (Nidhi313) is not.
       - id: name
-        run: echo "image=ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/finance-copilot-api:${GITHUB_SHA}" >> "$GITHUB_OUTPUT"
+        run: |
+          repo="ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/finance-copilot-api"
+          echo "image=$repo:${GITHUB_SHA}" >> "$GITHUB_OUTPUT"
+          echo "latest=$repo:main" >> "$GITHUB_OUTPUT"
       - uses: docker/login-action@v3
         with:
           registry: ghcr.io
@@ -42,7 +46,7 @@ jobs:
           push: true
           tags: |
             ${{ steps.name.outputs.image }}
-            ghcr.io/${{ github.repository_owner }}/finance-copilot-api:main
+            ${{ steps.name.outputs.latest }}
           labels: org.opencontainers.image.source=https://github.com/${{ github.repository }}
 
   staging:
