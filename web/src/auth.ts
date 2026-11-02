@@ -13,6 +13,7 @@ import {
 const env = import.meta.env;
 export const AUTH_MODE: "dev" | "entra" = env.VITE_AUTH_MODE === "entra" ? "entra" : "dev";
 const subdomain = env.VITE_ENTRA_TENANT_SUBDOMAIN ?? "";
+const tenantId = env.VITE_ENTRA_TENANT_ID ?? "";
 export const API_SCOPES = env.VITE_ENTRA_API_SCOPE ? [env.VITE_ENTRA_API_SCOPE as string] : [];
 
 export const msal: PublicClientApplication | null =
@@ -20,7 +21,9 @@ export const msal: PublicClientApplication | null =
     ? new PublicClientApplication({
         auth: {
           clientId: env.VITE_ENTRA_WEB_CLIENT_ID ?? "",
-          authority: `https://${subdomain}.ciamlogin.com/`,
+          // Naming the tenant by id makes MSAL load this exact tenant's sign-in metadata:
+          // https://<subdomain>.ciamlogin.com/<tenant-id>/v2.0/.well-known/openid-configuration
+          authority: `https://${subdomain}.ciamlogin.com/${tenantId}`,
           knownAuthorities: [`${subdomain}.ciamlogin.com`],
           redirectUri: window.location.origin,
           postLogoutRedirectUri: window.location.origin,
@@ -33,6 +36,7 @@ export function configProblem(): string | null {
   if (AUTH_MODE !== "entra") return null;
   const missing = [
     ["VITE_ENTRA_TENANT_SUBDOMAIN", subdomain],
+    ["VITE_ENTRA_TENANT_ID", tenantId],
     ["VITE_ENTRA_WEB_CLIENT_ID", env.VITE_ENTRA_WEB_CLIENT_ID],
     ["VITE_ENTRA_API_SCOPE", env.VITE_ENTRA_API_SCOPE],
   ].filter(([, v]) => !v).map(([k]) => k);

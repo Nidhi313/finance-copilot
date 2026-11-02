@@ -187,6 +187,7 @@ In `web/.env.local`:
 ```
 VITE_AUTH_MODE=entra
 VITE_ENTRA_TENANT_SUBDOMAIN=<same subdomain>
+VITE_ENTRA_TENANT_ID=<same Directory (tenant) ID>
 VITE_ENTRA_WEB_CLIENT_ID=<finance-copilot-web Application (client) ID>
 VITE_ENTRA_API_SCOPE=api://<finance-copilot-api Application (client) ID>/access_as_user
 ```
@@ -230,7 +231,8 @@ fills the local demo user, so it is not visible once sign-in is on.
 | `FX refresh failed` at startup | No internet or the provider is down; the app runs, net worth shows "not included yet". Retry with `docker compose exec api python -m app.cli fx-refresh 400` |
 | API code changes don't reload | Restart with `docker compose restart api` |
 | Tests can't connect | `docker compose up -d db` first |
-| Sign-in page says web/.env.local is missing values | Fill in all four `VITE_` values and restart `npm run dev` |
+| Sign-in page says web/.env.local is missing values | Fill in all five `VITE_ENTRA_`/`VITE_AUTH_MODE` values and restart `npm run dev` |
+| Sign-in page shows `endpoints_resolution_error` | The browser could not load the tenant's sign-in metadata. Open `https://<subdomain>.ciamlogin.com/<tenant-id>/v2.0/.well-known/openid-configuration`: if that fails, the subdomain or tenant id is wrong; if it works, check `VITE_ENTRA_TENANT_ID` is set and restart `npm run dev` |
 | After signing in: "Invalid token: Audience doesn't match" | `ENTRA_API_CLIENT_ID` must be the **api** app's client id, and `requestedAccessTokenVersion` must be 2 in its manifest |
 | After signing in: "token is missing the access_as_user scope" | `VITE_ENTRA_API_SCOPE` must end in `/access_as_user`, and admin consent must be granted on the web app's API permissions |
 | Sign-in page loops back to itself | The redirect URI on `finance-copilot-web` must be exactly `http://localhost:5173` (type: Single-page application) |
