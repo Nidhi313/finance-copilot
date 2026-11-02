@@ -49,5 +49,8 @@ class Settings(BaseSettings):
 
     max_upload_bytes: int = 5 * 1024 * 1024
 
+    # Set in Azure; empty locally, which turns telemetry off.
+    applicationinsights_connection_string: str = ""
+
 
 settings = Settings()

@@ -1,10 +1,15 @@
 name: CI
 
+# Runs on every pull request (the checks the main branch rules require), and is
+# called by deploy.yml before anything is deployed.
 on:
-  push:
-    branches: [main]
   pull_request:
     branches: [main]
+  workflow_call:
+  workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
   api:
