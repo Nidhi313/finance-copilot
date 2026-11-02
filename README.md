@@ -99,7 +99,9 @@ alembic upgrade head
 ```bash
 python -m app.cli seed               # countries, categories, launch country packs (safe to repeat)
 python -m app.cli fx-refresh 7       # exchange rates for the last 7 days
-python -m app.cli demo-data          # sample data for the demo user
+python -m app.cli list-users         # who has signed in, and how many accounts each has
+python -m app.cli demo-data [email]  # sample data: the local demo user, or a signed-in user by email
+python -m app.cli clear-data <email> # remove a user's accounts and records, keep the user
 ```
 
 ## How it's built

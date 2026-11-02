@@ -198,8 +198,14 @@ then "Sign up". A new account starts at onboarding and then the getting-started
 checklist. Sign out, sign up as a second person, and check that neither sees the
 other's data.
 
-Neither file is committed (`.gitignore` covers them). The demo data command only
-fills the local demo user, so it is not visible once sign-in is on.
+Neither file is committed (`.gitignore` covers them).
+
+Sample data for your signed-in account (for development; never mix with real data):
+```bash
+docker compose exec api python -m app.cli list-users
+docker compose exec api python -m app.cli demo-data you@example.com
+docker compose exec api python -m app.cli clear-data you@example.com   # back to empty
+```
 
 ### What this phase taught (interview notes)
 - The browser gets an access token from Entra; the API never sees a password.

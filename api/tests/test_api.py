@@ -368,3 +368,29 @@ def test_frankfurter_response_parsing():
     p = FrankfurterProvider(base_url="https://fx.test/v2", client=httpx.Client(transport=httpx.MockTransport(handler)))
     out = p.rates_per_usd(date(2026, 10, 30), date(2026, 10, 30))
     assert out[date(2026, 10, 30)] == {"AUD": D("1.52"), "INR": D("84.1")}
+
+
+def test_demo_data_for_a_signed_in_user_then_clear(client, db):
+    from app.demo import DemoError, clear_user_data, load_demo_data
+    from app.models import User, UserCountryLink
+
+    user = User(email="Nidhi@Example.com", auth_subject="oid-1", home_currency="AUD", active_country_code="IN")
+    db.add(user)
+    db.flush()
+    db.add(UserCountryLink(user_id=user.id, country_code="IN", relationships=["citizen"]))
+    db.commit()
+
+    msg = load_demo_data(db, "nidhi@example.com")
+    assert "5 accounts" in msg
+    db.refresh(user)
+    assert user.active_country_code == "IN"  # their own choice is kept
+    assert {c.country_code for c in user.countries} == {"AU", "IN"}
+    assert "already has accounts" in load_demo_data(db, "nidhi@example.com")
+
+    assert "Cleared data" in clear_user_data(db, "nidhi@example.com")
+    assert "5 accounts" in load_demo_data(db, "nidhi@example.com")  # clean start works again
+
+    import pytest
+
+    with pytest.raises(DemoError, match="Sign in to the app once first"):
+        load_demo_data(db, "nobody@example.com")
